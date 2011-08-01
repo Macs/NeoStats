@@ -1,0 +1,53 @@
+description {
+	version = "3.0.a3"
+	about = "Ice Cream Parlour"
+	credits = "Copyright (c) 1999-2008, NeoStats. http://www.neostats.net/"
+}
+command SCOOP {
+	helpstring = {"Have a scoop of ice cream of your choice"}
+	output = {"scoops out some %P1 ice cream and sticks in into a cone. Here ya go %F"}
+	action = true
+	paramlist = {"<Type> - The Type of Icecream"}
+	triggertype = 2
+}
+command DOUBLESCOOP {
+	helpstring={"Have a double scoop of ice cream of your choice"}
+	output={"scoops out some %P1 and %P2 ice cream and puts it into a cone. Here ya go %F"}
+	action = true
+	paramlist = {"<Type1> - First scoop of icecream",
+		     "<Type2> - Second Scoop of icecream"}
+	triggertype = 2
+}
+command SPLIT {
+	helpstring={"Have a delicious banana split"}
+	output={"takes out a banana and some ice cream and makes %F a large banana split"}
+	action = true
+	triggertype = 2
+}
+command SPRINKLES {
+	helpstring={"Put some sprinkles on your ice cream"}
+	output={"takes out the multi-colored sprinkles and puts some on %F's ice cream"}
+	action = true
+	triggertype = 2
+}
+command NUTS {
+	helpstring={"Put some nuts on your Ice Cream"}
+	output={"chops up some fresh nuts and puts them on %F's ice cream"}
+	action = true
+	triggertype = 2
+}
+command TOPPING {
+	helpstring={"Cheery? Chocolate? Butterscotch?"}
+	output={"takes out a container of %P1 and puts it on %F's ice cream"}
+	action = true
+	paramlist = {"<Type> - What Topping you want"}
+	triggertype = 2
+}
+command SUNDAE {
+	helpstring= {"Send a Friend a Sundae"}
+	output = {"make a %P2 sundae for %P1. Compliments of %F"}
+	action = true
+	paramlist = {"<Nick> - Who to give the Sundae to",
+                     "<Type> - The type of Sundae to give"}	
+	triggertype = 2
+}

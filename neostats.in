@@ -1,0 +1,130 @@
+#!/bin/sh
+#
+# NeoStats Startup Script
+# $Id: cronchk 583 2003-09-20 10:35:54Z Fish $
+#
+# This is a script suitable for use in a crontab or starting NeoStats
+# It checks to make sure NeoStats is configured correctly
+# and also starts/stops NeoStats, and checks that neostats is running from
+# when executed frm cron.
+#
+# To Start NeoStats, just execute this script
+# 
+# To check that neostats is running, put the following line in your 
+# crontab:
+#    0,10,20,30,40,50 * * * *   /home/macs/NeoStats3.0/neostats -c 
+# change this to the mail address to mail output to:
+#MAIL=me
+
+###############################################################################
+# End of User Configuration
+# Do Not edit anything below this line
+###############################################################################
+
+# change this to the directory you run your ircd from:
+dir="/home/macs/NeoStats3.0"
+
+# change this to the name of your Neostats file in that directory:
+ircdexe="/bin/neostats"
+
+# Neostats config file
+cfgfile="neostats.conf"
+
+# I wouldn't touch this if I were you.
+pidfile="neostats.pid"
+
+########## you probably don't need to change anything below here ##########
+
+if [ "$1" = "-c" ] ; then
+# Check From Cron
+	shift;
+	if test -r $dir/$pidfile; then
+	  	# there is a pid file -- is it current?
+		ircdpid=`cat $dir/$pidfile`
+  		if `kill -CHLD $ircdpid >/dev/null 2>&1`; then
+    			# it's still going
+    			# back out quietly
+    			exit 0
+	  	fi
+  		echo "NeoStats Crontab notice:"
+		echo ""
+	  	echo "Stale $ircdname file (erasing it)"
+  		rm -f $dir/$pidfile
+	fi
+	if test -r $dir/$cfgfile; then
+		echo ""
+		echo "Couldn't find NeoStats running.  Reloading it..."
+		echo ""
+		cd $dir
+		$dir/$ircdexe $@
+	else 
+		echo ""
+		echo "NeoStats is not configured. Not Loading it..."
+		echo ""
+	fi
+	exit 0
+elif [ "$1" = "start" ] ; then
+	#start NeoStats from command line
+	#first check if its running or not
+	shift;
+	if test -r $dir/$pidfile; then
+	  	# there is a pid file -- is it current?
+		ircdpid=`cat $dir/$pidfile`
+  		if `kill -CHLD $ircdpid >/dev/null 2>&1`; then
+    			# NeoStats is already running
+    			echo ""
+			echo "NeoStats is already Running, Not starting another copy"
+    			exit 0
+	  	fi
+		# remove the old pid file
+		rm -f $dir/$pidfile
+	fi
+	if test -r $dir/$cfgfile; then
+		echo ""
+		echo "Starting NeoStats..."
+		echo ""
+		cd $dir
+		$dir/$ircdexe $@
+	else 
+		echo ""
+		echo "NeoStats is not configured. Running Config Script..."
+		echo ""
+		sleep 2
+		$dir/bin/makeconf $dir/$cfgfile
+		if test -r $dir/$cfgfile; then
+			echo ""
+			echo "Ok, Starting NeoStats ..."
+			echo ""
+			cd $dir
+			$dir/$ircdexe $@
+		fi
+	fi
+	exit 0
+elif [ "$1" = "stop" ] ; then
+	#stop Neostats
+	if test -r $dir/$pidfile; then
+	  	# there is a pid file -- is it current?
+		ircdpid=`cat $dir/$pidfile`
+  		if `kill -CHLD $ircdpid >/dev/null 2>&1`; then
+    			# NeoStats is already running
+    			kill -TERM $ircdpid
+			echo ""
+			echo "NeoStats sent Term Signal"
+			tail -n 5 $dir/logs/neostats.log
+			rm -f $dir/$pidfile
+    			exit 0
+	  	fi
+		# remove the old pid file
+		echo "Couldn't find a copy of NeoStats running"
+		rm -f $dir/$pidfile
+		exit 0;
+	fi
+elif [ "$1" = "version" ] ; then
+	$dir/$ircdexe -v
+	exit 0
+elif [ "$1" = "help" ] ; then
+	$dir/$ircdexe -h
+	exit 0
+else
+	echo "Usage: $0 -c|start|stop|version|help <options>"
+fi

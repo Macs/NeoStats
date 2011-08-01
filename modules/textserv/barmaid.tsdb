@@ -1,0 +1,170 @@
+description {
+	version = "3.0.a3"
+	about = "Bar Service."
+	credits = "Copyright (c) 1999-2008, NeoStats. http://www.neostats.net/"
+}
+command beer {
+	helpstring = {"Nice cold beer of your choice"}
+	output = {"pours some %P from the tap and slides it to %F"}
+	action = true
+	paramlist = {"<Type> - Type of Beer"}
+	triggertype = 2
+}
+command shot {
+	helpstring = {"Have a shot of hard liquor"}
+	output = {"pours a %P into a shotglass and hands it to %F"}
+	action = true
+	paramlist = {"<Type> - Type of Shot"}	
+	triggertype = 2
+}
+command mixed {
+	helpstring = {"Mixed drink of your choice"}
+	output = {"mixes a %P for %F and sticks an umbrella in it"}
+	action = true
+	paramlist = {"<Type> - Type of Mixed Drink"}
+	triggertype = 2
+}
+command SELTZER {
+	helpstring = {"Be a wuss and have a seltzer"}
+	output = {"throws %F a seltzer water (wimp)"}
+	action = true
+	triggertype = 2
+}
+command SODA {
+	helpstring = {"Be a wuss and have a soda"}
+	output = {"thinks %F is a wuss, but pours a %P anyway"}
+	action = true
+	paramlist = {"<Type> - Type of Soda"}
+	triggertype = 2
+}
+command COFFEE {
+	helpstring = {"addicted to caffine ?"}
+	output = {"passes %F a cup of coffee"}
+	action = true
+	triggertype = 2
+}
+command COKE {
+	helpstring = {"Have a coke"}
+	output = {"opens up a fresh can of coke and sets it in front of %F"}
+	action = true
+	triggertype = 2
+}
+command COKETO {
+	helpstring = {"gives a coke to <nick>"}
+	output = {"opens up a fresh can of coke and sets it in front of %P1, compliments of %F"}
+	action = true
+	paramlist = {"<Nick> - Who to give the coke to"}
+	triggertype = 2
+}
+command PEPSI {
+	helpstring = {"Have a pepsi"}
+	output = {"opens up a fresh can of pepsi and sets it in front of %F"}
+	action = true
+	triggertype = 2
+}
+command PEPSITO {
+	helpstring = {"gives a pepsi to <nick>"}
+	output = {"opens up a fresh can of pepsi and sets it in front of %P1, compliments of %F"}
+	action = true
+	paramlist = {"<Nick> - Who to give the Pepsi to"}
+	triggertype = 2
+}
+command PRETZELS {
+	helpstring = {"Get a basket of salted pretzels"}
+	output = {"hands %F a basket of salted pretzels to munch on"}
+	action = true
+	triggertype = 2
+}
+command CIG {
+	helpstring = {"Buy a pack of smokes, any brand"}
+	output = {"pulls a pack of %P cigarettes from under the counter and hands them to %F"}
+	action = true
+	paramlist = {"<Type> - The type of Cigarettes"}
+	triggertype = 2
+}
+command MATCHES {
+	helpstring = {"Need a light? I'ts on the house"}
+	output = {"graciously lights %F's cigarette"}
+	action = true
+	triggertype = 2
+}
+command ORDER {
+	helpstring = {"Order anything you like"}
+	output = {"gives %F a %P"}
+	action = true
+	paramlist = {"<Item> - Any Item you like"}
+	triggertype = 2
+}
+command ORDERFOR {
+	helpstring = {"Order anything you like for <nick>"}
+	output = {"gives %P1 a %P2, compliments of %F."}
+	action = true
+	paramlist = {"<Nick> - Who to order for",
+		     "<Item> - The Item to order"}
+	triggertype = 2
+}
+command LATTE {
+	helpstring = {"LATTE"}
+	output = {"You want a WHAT? Have a real coffee you wimp!"}
+	action = false
+	triggertype = 2
+}
+command MUG {
+	helpstring = {"MUG"}
+	output = {"You need a warmup honey ?"}
+	action = false
+	triggertype = 2
+}
+command MUGFOR {
+	helpstring = {"MUGFOR"}
+	output = {"Fills %F's mug to the brim with freshly brewed coffee"}
+	action = true
+	triggertype = 2
+}
+command POT {
+	helpstring = {"POT"}
+	output = {"Boy, you must really need to wake up :-)"}
+	action = false
+	triggertype = 2
+}
+command POTFOR {
+	helpstring = {"POTFOR"}
+	output = {"passes the coffee pot to %P."}
+	action = true
+	paramlist = {"<Nick> - Who to give the coffee pot to"}
+	triggertype = 2
+}
+command ESPRESSO {
+	helpstring ={"ESPRESSO"}
+	output = {"fires up Espresso"}
+	action = true
+	triggertype = 2
+}
+command GROUNDS {
+	helpstring={"GROUNDS"}
+	output = {"Are you sucking on those coffee grounds %F?"}
+	action = false
+	triggertype = 2
+}
+command MOCHA {
+	helpstring={"MOCHA"}
+	output = {"ok, I'll fire up the Espresso machine",
+		  "Did you want some foam and cinnamon on that %F?"}
+	action = false
+	triggertype = 2
+}
+command DECAF {
+	helpstring = {"DECAF"}
+        output = {"Decaf ? WTF ? Why don't you just drink hot water ?"}
+	action = false
+	triggertype = 2
+}
+command TIME {
+	helpstring ={"TIME"}
+	output = {"Guess what time it is guys ?",
+	          "It's Maxwell House Time !!",
+		  "This round's on me...it's good to the last drop!",
+		  "And you say bots are useless..."}
+	action = false
+	triggertype = 2
+}

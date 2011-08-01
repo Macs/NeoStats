@@ -1,0 +1,129 @@
+************************************************************************
+** NeoStats - IRC Statistical Services                                **
+** Copyright (c) 1999-2008 NeoStats Group. All Rights Reserved.       **
+** This program and all associated documentation is free but          **
+** copyrighted software; see the file COPYING for details.            **
+** Homepage: http://www.neostats.net/                                 **
+************************************************************************
+
+Tips for using the SVN version of NeoStats.
+--------------------------------------------------------------
+
+So you like to live life on the bleeding edge of NeoStats development? 
+
+Although we do not support our development version being used in 
+production environments, here are a few tips that might come in handy for 
+those that want to follow development as it happens. 
+
+-----------------------------------<>-----------------------------------
+
+1 The development mailing list - devel@lists.neostats.net
+
+An ideal accessory for your copy of NeoStats development version is the 
+development mailing list. This is an open mailing list to receive commit 
+notices and discuss development issues relating to NeoStats. We recommend 
+that regular users of the development version join our development mailing 
+list.
+To subscribe, send a mail to devel-subscribe@lists.neostats.net
+
+-----------------------------------<>-----------------------------------
+
+2 Random crashes after getting the latest version
+
+The development version of NeoStats is in a constant state of change so 
+you may occasionally find that it appears to crash for no reason after 
+getting the latest version. Before reporting this as a problem, please 
+perform a full rebuild of NeoStats and all external modules that you use 
+(secureserv, opsb, stupidserv, logserv and any third party modules). To 
+perform a full build, run "make clean" then start from begin from the 
+configure step as you would for a new installation. Also see below for a 
+tip on faster clean rebuilds.
+
+-----------------------------------<>-----------------------------------
+
+3 Speeding up full builds
+
+To speed up full rebuilds of the core, it is possible to skip the 
+configure step by using the following sequence:
+
+1) make clean
+2) ./config.status
+3) cd curl
+4) ./config.status
+5) cd ..
+6) make
+7) make install
+
+For external modules, use the following sequence:
+
+1) make clean
+2) ./config.status
+3) make
+4) make install
+
+However, if configure.in or configure change in an update, you must use 
+configure since your config.status needs updating. 
+
+-----------------------------------<>-----------------------------------
+
+4 When external modules must be rebuilt
+
+As a general guide, if stats.h or dl.h changes, the safest way is to 
+rebuild all external modules (secureserv, opsb, stupidserv, logserv and 
+any third party modules). If you ever get a crash in the core or an 
+external module after using SVN update, make sure you have done a full 
+rebuild of both the core and all external modules to discount this sort of 
+error.
+
+-----------------------------------<>-----------------------------------
+
+5 I found a problem, do you want to know?
+
+Problem reports are often helpful to us but unlike the release version, 
+problems with the development version are handled in a different manner. 
+You must subscribe to our development mailing list and you should send any 
+report to devel@lists.neostats.net if no one else has already reported the 
+problem. 
+
+Please do not post problems encountered in the development version on the 
+NeoStats forums and only add them to the bug list if they also occur in 
+release versions. Also, please indicate which revision you are running. 
+This is given when you type 'svn update' to get files but if you forget, 
+type 'svn info' to see which revision you are running. 
+
+If you have modified NeoStats in any way, do not contact us unless you
+can reproduce the problem on an unmodified version. We provide no support
+at all for modifications made to NeoStats by others. 
+
+-----------------------------------<>-----------------------------------
+
+6 I get warnings when I compile, do you want to know?
+
+Generally no. Warnings are just that, warnings. The ones you are likely to 
+encounter rarely indicate a problem and we do see them ourselves and fix 
+them up as we work. We will also clean up any remaining warnings just 
+before a release. Just consider them a feature of life with the 
+development version. 
+
+Warnings on released versions of our software should be reported through 
+the usual channels of the forums or the bug list since they are generally 
+issued by a particular compiler that we have not used so have not seen 
+ourselves so you should also provide full details of your OS and compiler 
+as for any other bug report. 
+
+-----------------------------------<>-----------------------------------
+
+7 I have a feature request
+
+There is some discussion about the specifics of a given feature request 
+and improving features on the development list (particularly when we are 
+working with an individual or a group on a feature e.g. sqlserv). New 
+feature requests such as say support for a certain IRCd protocol that we 
+do not yet have or a new type of module should generally be posted on the 
+NeoStats forums or the bug list. 
+
+-----------------------------------<>-----------------------------------
+
+************************************************************************
+** This document was last updated on February 9th, 2004 by M          **
+************************************************************************

@@ -1,0 +1,101 @@
+description {
+	version = "3.0.a3"
+	about = "Send cheery messages to friends on IRC"
+	credits = "Copyright (c) 1999-2008, NeoStats. http://www.neostats.net/"
+}
+command HAIL {
+	helpstring = {"Send a hail song greeting"}
+	output = {"*sings* Hail to the %P, they're the %P and they need hailing, hail to the %P so you better all hail like crazy..."}
+	action = true
+	paramlist = {"<Nick> - Who to Hail!"}
+	triggertype = 2
+}
+command REDNECK {
+	helpstring ={"Send a redneck dubbing to someone"}
+	output = {"I dub thee \"Redneck\", May you enjoy your coons and over sexation and many hours of weird contemplation. If its dead you eat it, ifs living kill it than eat it. This is the redneck way. Country Music all the time no rap no jive no rock no hop this is the redneck way, now go forth into a redneck world and don't forget your boots."}
+	action = false
+	paramlist = {"<Nick/Channel> - Who to send the Redneck Dubbing too"}
+	triggertype = 2
+}
+command CHEERUP {
+	helpstring ={
+		     "Send a cheerup message to someone"}
+	output = {"Cheer up %P .....",
+	          "All of us on the network love you! 3--<--<--<{4@"}
+	action = false
+	paramlist = {"<Nick/Channel> - Who to send the Cheerup message to"}
+	triggertype = 2
+}
+command BEHAPPY {
+	helpstring = {"Send a behappy song to someone"}
+	output = {"%F thinks that you're a little sad.....",
+		  "*starts singing*",
+		  "Here's a little song I wrote, You might want to sing it note for note",
+		  "Don't Worry - Be Happy",
+		  "In every life we have some trouble, But when you worry you make it Double",
+		  "Don't Worry - Be Happy, Don't Worry - Be Happy now",
+		  "Don't Worry - Be Happy, Don't Worry - Be Happy",
+		  "Ain't got no place to lay your head, Somebody came and took your bed",
+		  "Don't Worry - Be Happy",
+		  "The landlord say your rent is late, He may have to litigate",
+		  "Don't Worry - Be Happy, Look at Me - I'm Happy",
+		  "Don't Worry - Be Happy",
+		  "Here I give you my phone number, When you worry call me, I make you happy",
+		  "Don't Worry - Be Happy",
+		  "Ain't got not cash, ain't got no style, Ain't got no gal to make you smile",
+		  "Don't Worry - Be Happy",
+		  "'Cause when you worry your face will frown, and that will bring everybody down",
+		  "Don't Worry - Be Happy, Don't Worry, Don't Worry - Don't do it",
+		  "Be Happy - Put a smile on your face, Don't bring everybody down",
+		  "Don't Worry, it will soon pass, whatever it is",
+		  "Don't Worry - Be Happy, I'm not worried, I'm happy . . . ."}
+	action = false
+	triggertype = 2
+}
+command WONDERFUL {
+	helpstring = {"Send a wonderful song to someone"}
+	output = {"*starts singing*",
+		  "So excuse me forgetting but these things I do",
+		  "You see I've forgotten if they're green or they're blue",
+		  "Anyway the thing is what I really mean",
+		  "Yours are the sweetest eyes I've ever seen",
+		  "And you can tell everybody this is your song",
+		  "It may be quite simple but now that it's done",
+		  "I hope you don't mind, I hope you don't mind that I put down in words",
+		  "How wonderful life is while %P is in the world"}
+	action = false
+	paramlist = {"<Nick/Channel> - Who to sing the song to"}
+	triggertype = 2
+}
+command ODE {
+	helpstring = {"Send an ode about someone"}
+	output =  {"*recites*",
+		   "How I wish to be a %P,",
+		   "a %P I would like to be.",
+		   "For if I was a %P,",
+		   "I'd watch the network hail thee.",
+		   "*bows*"}
+	action = false
+	paramlist = {"<Nick/Channel> - Who to sing a Ode About"}
+	triggertype = 2
+}
+command LAPDANCE {
+	helpstring ={"Send a lapdance to someone"}
+	output = {"*%B seductively walks up to %P and gives %P a sly look*",
+		  "*%B sits across %P's legs and gives %P the best lap dance of their life*",
+		  "*I think we both need a cold shower now*... *wink*"}
+	paramlist = {"<Nick/Channel> - Who to do the lapdance for"}
+	triggertype = 2
+}
+command POEM {
+	helpstring = {"Send an poem about someone"}
+	output = {"*recites*",
+		  "I wish I was a %P,",
+		  "A %P is never glum,",
+		  "Coz how can you be grumpy,",
+		  "When the sun shines out your bum.",
+		  "*bows*"}
+	action = false
+	paramlist = {"<Nick/Channel> - Who to recite a poem about"}
+	triggertype = 2
+}

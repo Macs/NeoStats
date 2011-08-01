@@ -1,0 +1,741 @@
+===============================================================================
+NeoStats 3.x ChangeLog 
+Anything we add/remove/fix/change is in here (even our rants)
+Fish (F), Mark (M), DeadNotBuried (D)
+===============================================================================
+* NeoStats * Version 3.0.1 (F)
+ - Fix Inspircd module Glining *@* (Neo-428) (F)
+ - Fix wrong prefixs for Inspircd Module as reported by Brain (F)
+ - Some FreeBSD's define sig_atomic and we were not checking for it in
+   configure. Fixed (F)
+ - A much more robust checking if Perl is available in configure (F)
+ - Bump Version (F)
+ - Fix spelling mistake (one of many I'm sure) found by Paul Balfe (F)
+
+* NeoStats * Version 3.0.0
+ - Finish the Update Module (F)
+ - Move the copyright handler in the HTML output of StatServ to a proper
+   function, simplifies the HTMLOutput loop, and hopefully fixes NEO-420 (F)
+ - Timers now only fire when needed, rather than once every second (F)
+ - Update Libevent Logging to LogLevel 10 and enable it (F)
+ - Update CURL to hopefully fix a "Invalid Socket" error (F)
+ - We should be using channel TS's when sending mode changes etc (F)
+ - Inspircd requires additional params for PONG messages. Update (F)
+ - Add initial inspircd support for Inspircd 1.1 only. Still WIP (F)
+ - Fix Userdump using channel mode function, rather than usermode function
+   (F)
+ - Make the default action in the Mode Parser to "Add" to work around a
+   Inspircd bug (F)
+ - Fix CmodePrefixToMask to return -1 rather than 0, then we can set certian
+   characters to ignore (such as Inspircd's use of , as a delimiter in FJOIN
+   command (F)
+ - Fix inbuild SJOIN function to handle NULL mode param (F)
+ - add SVSKILL recieving support to Unreal3.2 module. Might be worthwhile as
+   a global function though (F)
+ - Tokens are case sensitive (at least in Unreal) so make sure we use the
+   right comparision for token checks (F)
+ - Incorporate a Perl Script (NamedVarsInspector.pl) that allows you to view available NamedVar
+   entries - Usefull for Perl Module Developers (F)
+ - Implementation of DBA* routines for Perl Modules. (F)
+ - Fix Ping value for servers when we first load up, to avoid StatServ
+   broadcasting about servers lagged out by thousands of seconds (F)
+ - Fix Logging Levels (F)
+ - Fix the wrong ordering of transfer_status in Curl Code (F)
+ - upgrade nxml and mrss libraries to latest version (F)
+ - Fix up Debug Log Levels a bit to remove cruft (F)
+ - StatServ should default to Enabled for Global Exclusions Setting (F)
+ - Rename TextServ databases with extension tsdb and move into the Data
+   Directory, rather than data/TSDB (F)
+ - Context Sensitive Help is now in place (eg, !help versus /msg bot help) (F)
+ - report command syntax in case of syntax errors (configurable)
+ - TextServ uses confuse file format for databases (a bit more flexibility
+   can be achived now) (F)
+ - Correctly check error returns from LibEvent (F)
+ - If colour is enabled and logging is enabled in connectserv, strip the
+   message before writting the logfile (F)
+ - Rename BOT_FLAG_SERVICEBOT to BOT_FLAG_ROOT to better reflect purpose (M)
+ - Remove BOT_FLAG_NOINTRINSICLEVELS, intrinisc levels are now only applied to
+   module root bots. (M)
+ - Remove BOT_FLAG_NOINTRINSICSET since it is redundant due to the way bots are
+   created. (M)
+ - Open up command processor to secondary bots. (M)
+ - Limit modules to a single root bot. (M)
+ - Fix botinfo loading. (M)
+ - With M's fix below, SERVICECMODE can now support multiple modes.
+   Re-adjust the SET function to allow this. (F)
+ - Allow multiple sjoin modes (M)
+ - Fix StatServ Topic Counts incorrect (F)
+ - Fix OperCount in StatServ (NEO-391) and Fix Raw (NEO-400) (F)
+ - Add a new BOT flag to not load up the intrinisic set commands (F)
+ - Fixed up a bug with ConvertDB (F)
+ - Better detection of Berkeley DB (F)
+ - Update Libevent to latest version (F)
+ - Fix Timers because we were not updating the current time often enough(F)
+ - Fix HTTP transfers when saving to memory (such as SecureServ) (F)
+ - Currently, SERVICECMODE only supports a single mode. Make sure we check
+   for that in the set handler (F)
+ - Lots of Changes to LimitServ (F)
+ - Fix a crash on shutdown with Perl Modules Loaded (F)
+ - Make sure Perl Modules are not built when perl is disabled. (F)
+ - Fix NEO-363, DNS Problem when shutting down (F)
+ - Maybe a Fix for NEO-364 (F)
+ - Implement Timeouts for CURL (NEO-380) (F)
+ - StatServ GeoIP was using gethostbyname_r which isn't needed (F)
+ - Fix ServiceRoot Validate Function and RootNick validate Function (F)
+ - If we can't write to a logfile, bail out by calling exit, rather than
+   do_exit() otherwise we end up in recursive hell (F)
+ - Start work on EOB support which should also address bug Neo-381 (F) 
+ - Fix bug 261 - wrong Syntax Error message in oper only mode (M)
+ - "make distcheck" now works so we can prepare snapshots easily. use
+   --with-distversion={rev} to append revision to the tarball. This will
+   also allow us to automatically generate snapshots via Pulse
+   (http://svn.neostats.net/build/) (F)
+ - Update "make dist" and almost fixed "make distcheck" (F)
+ - Fix module version checking (We can't use VERSION define, as some modules
+   might use it, so rename to NEO_VERSION) (F)
+ - Fix Win32 compile again. (M)
+ - Updated Muscle files to latest version (3.24) (F)
+ - Fixed up configure problem with Perl so perl could never be found (F)
+ - Started implementing NamedVars so perl can read from internal Hash's and
+   List's (F)
+ - We don't need g++ or c++ compilers, so tell libtool to shutup about those
+   compilers (F) 
+ - Version Macro is fixed (F)
+ - Curl now uses updated event based socket Code (F)
+ - Fix up muscle code to run on Intel Mac's (F)
+ - Update libcurl to 7.16.0 to take advantage of new event based socket
+   code. Also link in SSL and zlib libaries for initial support for CURL and
+   eventually the rest of NeoStats - Untested!
+ - TODO: VERSION macro is breaking some newer compilers. (F)
+ - StatServ COPY command is now RENAME since that is what it does. (M)
+ - Fix segfault in StatServ COPY. (M)
+ - Fix StatServ oper counts. (M)
+ - Fix 4 year old bug in module loading.  (M)
+ - Fix up neostats startup script etc for cron related issues - Thanks to
+   Digerati for the heads up(F)
+ - add plexus 3 protocol file for reference (D)
+ - Fix compile errors on GCC 2.95.4 (D)
+ - QuoteServ shouldn't send signon messages to Neo Bots (F)
+ - Fix LimitServ timer to not set limits every time (F)
+ - NSDBAFetchRows2 function added, that also returns the key used to store
+   the records to the handler as a string (F)
+ - Utility tool called convertdb added to convert betweeen database modules (F)
+ - GDBM Database files are now named <Module>-<table>.gdbm. GDBM database
+   module will automatically rename files when first loaded (F)
+ - Finish the Berkeley DB interface module (F)
+ - Fix quoteserv prefix and suffix processing (F)
+ - Really fix IRCu IP address conversions (F)
+ - Include Modules loaded in segfault report (F)
+ - Fix IRCu IP address detections (F)
+ - have Pseudo Client change Channel modes on unreal3.2 instead of the Server (D)
+ - Fix /msg neostats level when specifing a invalid nick (F)
+ - Fix a issue with SVSJOIN on Unreal (F)
+ - New Config option "Options, MaxSockets" to limit the number of available
+   sockets that NeoStats can use (F)
+ - Fix adns to correctly handle EINPROGRESS for TCP connections (F)
+ - Make sure SET LIST shows the correct host entry if we using the default (F)
+ - Fix the ordering of AddBot so that stored settings such as
+   nick/ident/host etc are applied when the bots load (F)
+ - Change LibCurl and LibPCRE to be statically compiled into NeoStats rather
+   than as dynamic libraries (F)
+ - Add libnxml library for Feature request 292 and new module "NewsServ" (F)
+ - Module Runlevels were not being set for Curl Transfer callbacks, causing
+   DB issues (F)
+ - Add a prototype for the DBAFetchRows2, which returns the DBA key as well (F)
+ - Update to libnxml 0.12 to fix a parser bug (F)
+ - Fix compile error with libnrss (F)
+ - Fix logic error when using default service bots host (F)
+ - Fix addlevel command in hostserv reported by Prince (F)
+ - Fix a problem with NeoNet and No Groups being sent during Login (F)
+ - BDB - Make sure recovery is run when opening DB's (F)
+ - BDB - Not all BDB have some enviroment flags (F)
+
+* NeoStats * Version 3.0.a3
+ - LimitServ: join/part bot on adding/deleteing channels if JOIN enabled (D)
+ - HostServ: fix loading of previously added bans (D)
+ - Finish up the core side NeoNet support. Modules such as SecureServ and
+   OPSB are next (F)
+ - Fix problem with DNS queries going to the wrong list when it needs to be queued up (F)
+ - EVENT_KILL now also sends EVENT_QUIT so modules can just watch sign on/off 
+   rather than being forced to watch and process KILL. (M)
+ - Add WHOIS processing. (M)
+ - Add FindClient function. (M)
+ - Add logging support to CommandReport function. (M)
+ - Fix a crash with faked localkill messages (F)
+ - Increase the backtrace size, as we go a lot deeper than we used to (F)
+ - Add MODE_INIT_END and IRC_CMD_END macros for protocol table NULL 
+   terminators. (M)
+ - Win32: system tray menu options for NeoStats web site and forums. (M)
+ - Win32: add right click menu to system tray icon. (M)
+ - Win32: minimise to system tray instead of task bar. (M)
+ - First pass DBA redundancy reduction. (M)
+ - HostServ: additional wildcard checks to fix security loophole. (M)
+ - Replace SET VERSIONSCAN option with automatic support based on module
+   flags. (M)
+ - Fix OSX changes which prevent NeoStats running on any platform. (M)
+ - Fix a potential security vulnerbility with user supplied strings (F)
+ - NeoStats now compiles and runs on Mac OSX (Tiger) (F)
+ - Introduce module override to allow a module bot to become the primary source
+   of signon CTCP version requests. (M)
+ - Add broadcast forms of CTCP events so that modules can watch just their own 
+   CTCP transactions or all CTCP transactions on the network. (M)
+ - Introduce framework for unknown ctcp messages. (M)
+ - Fix a memleak in ExtAuth (F)
+ - Netinfo on Ultimate3 is like Globops, not a burst function (F)
+ - Create core support for map generation accessible to all modules via a 
+   callback handler and tidy up StatServ map code to take advantage of 
+   the new function. (M)
+ - Exclude system tidy ups and bug fix for module excludes. (M)
+ - More Validatexxx functions which will allow for wildcards in the string
+   tested. (M)
+ - StatServ: boot time sanity checks for list and hash creation. (M)
+ - StatServ: port version stats to DBA API. (M)
+ - QuoteServ: add sanity checks to db loads. (M)
+ - QuoteServ: fix win32 crash - strdup cannot be used in modules. (M)
+ - Add strcasestr support function since not all systems support it. (M)
+ - New macros NS_CMD_END() and NS_SETTING_END() for terminating command and set
+   lists. (M)
+ - ConnectServ colour logging is now settable via IRC (F)
+ - First round of memory cleanups with Valgrind (F)
+ - Create a runvalgrind.sh file with NeoStats suppressions for memory
+   checking (F)
+ - Sync up libevent to distribution of 1.1a (F)
+ - Make QuoteServ take a optional database for Quote Command (F)
+ - Fix up triggering WANT_NICKIP code (F)
+ - Fix up quoteserv and un-init memory errors causing crashes for me (F)
+ - let limitserv have a buffer (F)
+ - CTCP version scans are now more flexible in (F)
+ - This will make the version.h file reflect the current SVN Revision, not
+   the include SVN revision number (F)
+ - Perl 5.8.0 doesn't have XSRETURN_UV, so it does now via our checks (F)
+ - Perl Module Support now has most functionality of standard C Modules.
+   Need to fix up NeoStats.pm to do lots of sanity checking first though (F)
+ - Fix a crash on shutdown in nsdba relating to not statically storing the hash key (F)
+ - add missing modules lines to makeconf (D)
+ - increase module limit to 40 (D)
+ - TextServ: allow multiple channels per bot (D)
+ - TextServ: allow databases to be used in multiple bots (D)
+ - TextServ: install data files to TSDB sub folder of data (D)
+ - Basic Perl Support thanks to XChat. Now time to write all the Hooks (F)
+ - Change Source Layout, so we don't go and rebuild protocol and DB files
+   all the time (F)
+ - Implement framework for Perl Support (F)
+ - Fix warnings that GCC 4.0 generates (F)
+ - LimitServ: set minimum limit settable by LimitServ to Users + 1 (D)
+ - LimitServ: fix paramter order being passed to ManageLimits (D)
+ - Move Config file over to confuse engine, and redo makeconf to work with
+   new config file format (F)
+ - Move Secure.irc-chat.net update code to core to allow OPSB to use it as
+   well (F)
+ - Store the IP address we connect to in tme so we can reference it from
+   other modules (F) 
+ - allow SERVICEROOT to check against IP Address as well as Host (D)
+ - check if exclusions are already included in list before adding (D)
+ - attempt to find bot unused nickname when both nick and altnick in use (D)
+ - QuoteServ: add option to use global excludes (D)
+ - QuoteServ: check signon quote setting before sending signon quote (D)
+ - QuoteServ: fix crash when quotes requested but no databases defined (D)
+ - Help system updated. The oneline help text is now part of the main help text
+   for commands to simplify creation and maintainance of help text. (M)
+ - QuoteServ: Add support for quotes at SIGNON. (M)
+ - QuoteServ: Add support for prefix and suffix entries. (M)
+ - QuoteServ: Add support for random quotes. (M)
+ - Add new module: QuoteServ. (M)
+ - TextServ: Add moraleserv database. (M)
+ - TextServ: Add loveserv database. (M)
+ - TextServ: Add database reading support. (M)
+ - DCC fixes and move partyline support to an external module to aid 
+   development of the DCC module API. (M)
+ - Add support to set topic from NeoStats. (M)
+ - Add _m_ignorecommand function for protocol modules to silently drop messages
+   that they receive but require no further processing by NeoStats. (M).
+ - Add seperate protocol files for IRCu and variants rathe than require users
+   to modify the code in order to access variants. (M)
+ - New protocol support minismising the code required to implement an ircd
+   protocol module for NeoStats by providing comprehensive and where possible
+   automatic support for common functions. (M)
+ - Add default modes to ircd layer to further reduce overhead of protocol 
+   modules. (M)
+ - Add support for SVSJOIN and SVSPART. (M)
+ - LEVEL command now resets user level so that users can cause NeoStats to
+   recheck their access rights after any settings changes. (M).
+ - Prevent ability to disable debug mode if DEBUG enabled to avoid all the 
+   overrides necessary in code. (M)
+ - StatServ: Add FLATMAP option to prevent display of network layout in MAP
+   command and HTML output (Bug 220). (M)
+ - Add support for IRCd protocol modules to make server version requests. (M)
+ - Add support for IRCd protocol modules to call core numeric reply 
+   handlers. (M)
+ - Add support for IRCd protocol modules to make server uptime requests. (M)
+ - Merge ADNS lib into core. (M)
+ - add random channel member funtion (D)
+ - Fix Win32 text output for log files. (M)
+ - ADNS now uses neostats memory management. (M)
+ - Merge gdbm lib and gdbm DBM module. (M)
+ - StatServ: Merge GEOIP and GEOIPWIN32 libs. (M)
+ - Merge ADNS and ADNSWIN32 libs. (M)
+ - Module command setup is now more strict. Commands will not be added if the
+   main help text or the one line help text is not set. (M)
+ - Module loads are now more strict. About text and copyright text are required
+   and if the code is based on the template text, this must be changed before
+   the module will load. (M)
+ - Fix FNMATCH error on configure (we don't use fnmatch) (F)
+ - Fix SET RECVQ. (M)
+ - More work on ossocket layer. (M)
+ - Fix bug 221: crash when no command after ! in channel commands. (M)
+ - Retire mystic, liquid, neoircd, quantum and viagra to graveyard. (M)
+ - Update userhostmask/uservhostmask after nick change to keep current (D)
+ - Recheck User Exclusions after updating userhostmask on Nick change (D)
+ - Tidy up the new socket code (F)
+ - Fix bug with ordering of process_ip in AddUser. nick variable isn't
+   static, and usually is gone when we callback (F)
+ - DCC Partyline support added (F)
+ - replace socket/select code with a libevent based implementation (F)
+ - Provide a "buffered" socket implementation for network communications (F)
+ - Provide a "newline terminated protocol" socket implementation to handle
+   IRCd and DCC Chat communications (F)
+ - Add ability to exclude nick!user@host masks. (M)
+ - Add nick!user@host and nick!user@vhost mask generation to core. (M)
+ - DBA layer will now pass size of data fetched in FetchRows. (M)
+ - Add support to ircd layer for processing ERROR messages from the uplink. (M)
+ - Add optional SERVICE_HOST config entry to allow users to set a default host
+   for service bots. If not specified, server name is used. (M)
+ - DBA layer will now cause NeoStats to exit in the event of an error opening
+   a table. (M)
+ - Remove GDBM locking to try and fix problems on BSD. (M)
+ - Remove RTA support. (M)
+ - Add Umask function so our config files are not world/group readable, and
+   update htmlstats in statserv to change the permissions after writting out
+   the file (F)
+ - StatServ: Fix last seen and start timestamps. (M)
+ - Add support framework for SGLINE, SZLINE and SQLINE. (M)
+ - Bahamut protocol module changed to bahamut14 and bahamut18 to allow support
+   for both versions. (M)
+ - Add operlog to supported modules. (M)
+ - Add support for incoming GLOBOPS, CHATOPS and WALLOPS. (M)
+ - HostServ: add nick/host/vhost limits to list command (D)
+ - HostServ: add option to limit vhost adding to current nick only (D)
+ - Introduce framework for new textserv module. (M)
+ - Remove LoveServ and MoraleServ since these are to be replaced by the new
+   textserv module. (M)
+ - StatServ: Remove 2.5.x bdb remnants. (M)
+
+* NeoStats * Version 3.0.a2
+ - Fix bug with module excludes when there are multiple modules loaded using
+   module excludes. (M)
+ - Remove fieldname from settings structure since option already provides a 
+   unique string for storage. (M)
+ - Add validate and random channel key functions. (M)
+ - Remove RELOAD command from Win32. (M)
+ - Fix RELOAD command not working reported by DNB. (M)
+ - Fix problems with persistent bots reported by DNB. (M)
+ - va_copy handling courtesy of Reed. (M)
+
+* NeoStats * Version 3.0.a1
+ - Add more info to segfault.log reports. (M)
+ - Add ModFini return value so modules can return errors if required. (M)
+ - Remove ModInit parameter since it is now redundant. (M)
+ - Command processor code split up. (M)
+ - Add SET_VALIDATE stage to allow a module to override core SET validation and
+   to potentially react to the previous setting prior to SET_CHANGE. (M)
+ - Command processor code split up. (M)
+ - Add API for IRCd specific host cloaking. (M)
+ - ConnectServ: Add option to watch AWAY events. (M)
+ - CODERHACK changed to a more secure format. Users will now be required to set
+   CODERHACK to a nick agreed between the network and the developent team so 
+   that even when we need to use this, the remains secure from a rogue user
+   knowing the usual access nick (M)
+ - API improvements fixing naming conventions and additional macro support. (M)
+ - StatServ: Add option to configure old channel time. (M)
+ - Add options to configure message flood sample time and threshold. (M)
+ - StatServ: Since stats command only allows management of server stats, 
+   combined with server command. (M)
+ - Add DCC support to NeoStats, you can now have a DCC chat with neostats and
+   issue commands via this interface. (M)
+ - Add CommandReport function for use by modules to report command information
+   and take account of reporting options. (M)
+ - Change NeoStats root user to use a config file nickname. This is for future
+   use in multiple NeoStats incarnations running in a shared environment. (M)
+ - Add module exclusion API so modules can use a local exclusion system without
+   having to code and maintain one locally. (M)
+ - Add WEEKLY and MONTHLY options to timer API. (M)
+ - HostServ: ban use of "*" as realhost mask since this is a potential security 
+   risk. (M)
+ - Updated handler systems so that a caller can "break" the list loop. (M)
+ - Exclude system del now takes a host rather than an index. (M)
+ - Channel members now use client pointer so they do not need to track nick 
+   changes. (M)
+ - Fix up make install, make dist and wrappers for starting/stopping
+   NeoStats (F)
+ - Fix statserv map command, and fix neostats server list command (F)
+ - Fix Statserv server minparam count (F)
+
+* NeoStats * Version 3.0.prealpha2
+ - First recommended release to devlist only as prealpha2. (M)
+ - Port all database interaction to new DBA interface. (M)
+ - Add support for GDBM as an alternative to BDB. (M)
+ - New DB interface to replace keeper calls. (M)
+ - Lots of AutoMake updates so that distros work again and external modules
+   have includes available. (M)
+ - StatServ: complete rewrite of statistics systems. (M)
+ - Very basic stats added to core for debug, reported in STATUS command. (M)
+ - Fix up memory leaks and missing list/hash clean ups. (M)
+
+* NeoStats * Version 3.0.prealpha1
+ - First recommended release to devlist only as prealpha1. (M)
+ - New moddata API. We now have two values for use by modules, one being an 
+   allocated address and one a value. This allows the core to clean up after
+   modules in the event that they fail to. (M)
+ - RTA support has been moved back itno the core rather than being a module. 
+   It did work fine as a module, but was limited to providing core info only
+   since there is no module <-> module communication at this point and created
+   module depedencies. Making this a module will be looked at again at some 
+   future point. (M).
+ - HostServ: Improved ban handling. (M)
+ - HostServ: LEVELS command removed since core now handles this. (M)
+ - All commands now have a configurable minimum user level using the command
+   /msg botname LEVELS. (M)
+ - HostServ: moddata use removed in favour of a simple flag in the core wrt
+   user SETHOST from NeoStats. (M)
+ - HostServ: BANS DEL now takes host as a parameter not an index. (M)
+ - HostServ: DEL and VIEW now take nick as a parameter not an index. (M)
+ - StatServ: add option to configure html update interval. (M)
+ - Add support for persistent bots which do not auto leave channel when it is 
+   empty. (M)
+ - Remove NETINFO event. Not available on all ircds and useless since the 
+   ModSynch call will let a module know the network is synched. (M)
+ - Make joining services channel a SET option so people can prevent NeoStats
+   bots joining the services channel. Generally, the bots can message channels
+   without being in them. With them not being there means we can drop 
+   chanalerts when the channel is empty and save a bit of otherwise wasted 
+   bandwidth. (M)
+ - USERDUMP etc commands changed to USERLIST etc to be consistent with similar
+   commands. (M)
+ - StatServ: updated to use core side kill types. (M)
+ - ConnectServ: updated to use core side kill types. (M)
+ - Process kill types within the core. (M)
+ - ConnectServ: add logging facility to log events. (M)
+ - Channel alerts for command use is now optional. (M)
+ - Automatically remove NeoStats bots from channels when there are no longer
+   any real users in the channel. The services channel is excluded. (M)
+ - Add neousers counter to Channel structure for tracking our bot counts in a
+   given channel. (M)
+ - Core command processor can now handle channel message commands e.g. !help
+   using the standard command tables. Command char is selectable via a SET
+   option. (M)
+ - Add new timer type TIMER_TYPE_COUNTDOWN. This is a one shot timer that 
+   deletes itself after it has triggered. (M)
+ - Initial import of Language Functions. Two Macro's to use now, _(x) is for
+   default language, and __(x, Client*) is for user/channel language
+   settings. (F)
+ - More portability wrappers for file access since Win32 DLLs do not appear to
+   be able to use fopen etc locally. This also means we can look at using more
+   optimal Win32 native file processing calls. (M)
+ - NeoStats alloc/free functions updated. (M)
+ - Begin adding portability functions for file system calls, socket management 
+   etc to make it easy for modules to be Win32 compatible. (M)
+ - Remove all SqlSrv code from core in preparation for moving to a module. (M)
+ - Alter CODERHACK dependency so it only requires a rebuild of auth.c rather 
+   than potentially a reconfigure and full rebuild. (M)
+ - Change UserDump and ChanDump to use prefmsg rather than chanalert and remove
+   calls during error conditions to prevent flooding the services channel. (M)
+ - Extended and optimised mode support. (M)
+ - Ability to enable/disable events so that a module can "optimise" it's event
+   table based on options e.g. disabling ConnectServ sign watch can disable
+   the SIGNON event core side. (M)
+ - More flags added to event system to allow the core to automatically handle
+   exclusions of NeoStats clients and global exclusion entries. The module can
+   manipulate the current settings based on local options. (M)
+ - Add error field to Module structure so the core can flag a module as being
+   in an erroneous state and unload it at an opportune time. E.g. if a module
+   calls init_bot from ModInit, the call will fail gracefully and the module 
+   will be automatically unloaded once the core rgains control. (M)
+ - EVENT_ONLINE removed with previous functionality available via a ModSynch
+   function. Advantages over the event are that it can return a failure status
+   if for example an init_bot call fails and we can unload the module. It also
+   means modules that do not need to use any other events can now ignore the 
+   event sub system and the core can do less event checking. (M)
+ - neostats.cfg renamed to neostats.conf. This is to be more consistent with 
+   other packages and to avoid someone using a config file from an older series
+   with NeoStats 3.0. (M)
+ - Combine standard and auth module load/unload systems so we can load and 
+   unload auth modules easily. (M)
+ - Remove me.onchan since it is always set with me.synched so is redundant. (M)
+ - Replace me.synched references with IsNeoStatsSynched() for consistency. (M)
+ - Timers now have a new type field to select the standard interval timer or 
+   a midnight timer. Other types to follow. (M)
+ - Timers now check module synched before running. (M)
+ - Event system now uses an array per module so that issuing an event is a 
+   simple (and quick) table lookup rather than parsing the whole list each 
+   time. This also makes it possible for modules to add and delete events while 
+   running. (M)
+ - Core now handles synch checking for module events. If a module wants to
+   receive an event before synch complete, they just add a flag into the event 
+   table and the core will always pass the flagged event along. (M)
+ - Some new list and hash functions to standardise list/hash code. (M)
+ - Fake deaf mode on IRCds that do not support it natively. (M)
+ - CTCP handling to send and process CTCPs easily. (M)
+ - Update events and group them by type so events.h is a more useful 
+   development resource. (M)
+ - StatServ: Modify GeoIP for Win32 and add as a second version. (M)
+ - StatServ: GeoIP lib moved to own directory. (M)
+ - New debug levels of DEBUGRX and DEBUGTX to identify incoming and outgoing
+   messages. (M)
+ - Mode descriptions now handled core side so modules can share the information
+   rather than define local variants. (M)
+ - ConnectServ: mode reports now run from a table. (M)
+ - More core side UMODE support. (M)
+ - Add support for online bot realname, host and ident changes. (M)
+ - Add support for IRCd SETNAME, SETIDENT and SETHOST functions. (M)
+ - Add support for online bot nick changes. (M)
+ - Combined BOTCHANLIST command with BOTLIST command. (M)
+ - Remove redundant botchanhash code and tables. We can get this information
+   via the bot, users structure channel list. (M)
+ - Optimise bot quit paths. (M)
+ - Optimise bot and associated user links to reduce lookups. (M)
+ - Change module processing so we can have debug versions of DLLs. (M)
+ - New Client struct introduced which contains common elememts of Server and
+   User structs. Server and User specifics remain as substructs of Client. This
+   makes for simpler coding for the more common elements and allows us to 
+   add additional clients without major changes to the core and API with new
+   substructs in the Client struct. (M)
+ - IRCD feature support is now self configuring based on whether a function 
+   exists to handle a feature. This means less work for IRCd coders and allows
+   a protocol module to "emulate" a feature locally that would normally require
+   additional core support. (M)
+ - Mode processing code moved to modes.c/h (M)
+ - Module API inmprovements and core flow optimisations. Functions now pass 
+   valid bot and user pointers rather than looking them up multiple times. (M)
+ - makeconf updated to reflect changes and some tidy ups (M)
+ - Depreciate some useless config items from neostats.cfg:
+   STATSERV_NETNAME - we do not use this and overwrite it when we get netinfo
+   NEOSTAT_HOST - Default to servername as host and allow online config
+   NEOSTAT_USER - Default to Neo and allow online config
+   This makes configuration easier (M)
+ - Extend BotInfo structure and simplify init_bot function to use extended 
+   structure. (M)
+ - Add synched field to Module structure so modules can tell when they are 
+   online without having to maintain local variables and can be taken offline
+   easily by the core. (M)
+ - Add automatic bot_info SET options. (M)
+ - Core command processor now uses a hash for SET options to speed up option
+   processing. (M)
+ - Add feature check to load modules so that modules will not load if the 
+   selected protocol does not support a required feature. e.g. HostServ
+   required SVSHOST support. (M)
+ - Update auth modules so that they just calculate a level and leave the core
+   to decide whether it overrides a current level. (M)
+ - Reg nick support might not use mode +r so calculate the correct char when 
+   loading IRCd and use variable for checking it. (M)
+ - Optimise UserLevel processing so after a user level is calculated it is then
+   a lookup rather than needing to recalculate every time. (M)
+ - Send STATS u request to incoming servers so we can store uptime info for 
+   statistics. (M)
+ - Store client CTCP version reply in user struct so we can access it after the
+   event. (M)
+ - Send VERSION request to incoming servers so we can store version info for
+   statistics. (M)
+ - update hostserv to use match rather than fnmatch. (F)
+ - More autotools updates to shut it up some more, and improve build process (F)
+ - Update makeconf to generate a PROTOCOL line. (M)
+ - Update automake files for core and protocol to observe new protocol module
+   generation. (M)
+ - Win32: Add debug console to GUI version with redirects of STDOUT and STDERR
+   which depreciates the console version. (M)
+ - Win32: Add fnmatch to core since it does not exist on Win32. (M)
+ - Win32: Create protocol DLL files. (M)
+ - Protocol system is now modular and required loading of a protocol module via
+   neostats.cfg. (M)
+ - Win32: Macros for modules/core exports for DLL compatibility. (M)
+ - Win32: Create Win32 compatible dl_xxxx system for modules. (M)
+ - Win32: Generate core export library for use by modules. (M)
+ - New macro MSGTOK to use in protocol modules for MSG_*/TOK_* selection. (M)
+ - Core no longer depends on protocol specific headers. (M)
+ - Change protocol files to be more modular. Support functions accessed via
+   pointers. (M)
+ - Win32: Run NeoStats main code on a thread. (M)
+ - Win32: Add very basic GUI. (M)
+ - Win32: Disable fork. Windows handles processes differently. (M)
+ - Win32: Disable unsupported signal processing. (M)
+ - Win32: ADNS Win32 compatible library import. (M)
+ - Win32: Macros created for *nix function not available. (M)
+ - Win32: dl code disabled for first pass Win32 support. (M)
+ - Win32: Socket code updated to WinSock compatible calls. (M)
+ - Win32: Keeper KP_P reserved in Win32 so renamed to KP_PATH (M)
+ - Win32: #define around header files not available under Win32 (M)
+ - Win32: configwin32.h is a fixed config.h since Windows does not need 
+   different ones. Creates problem of how to choose IRCd. (M)
+ - Win32: Early support for native compilation under MSVC .NET 2003 (M)
+ - Change init_bot so that in client mode, module commands and settings are
+   just added to the main bot. (M)
+ - Begin adding a client protocol so that NeoStats can connect as a normal
+   client rather than a server. (M)
+ - Split unreal and ultimate protocol files into ultimate2, ultimate3, unreal31 
+   and unreal32 for easier maintainance. (M)
+ - Begin moving common mode defines to neostats.h from ircd specific files. (M)
+ - Channel key and limit modes now have explicit support rather than being 
+   included in general mode parameters list. (M)
+ - Begin improved mode handling. Protocol module tables are parsed at boot into
+   a faster core lookup table. The speedup is based on the fact that more often
+   than not we lookup a mode char so we can index on this char rather than loop
+   through every mode multiple times looking for a match. (M)
+ - Import libtools wrappers for dynamic module support (F)
+ - Full AutoConf Support on the way. Core Compiles. Modules Dont yet (F)
+ - Remove hard coded protocol/feature references in StatServ and HostServ. 
+   These are depreciated by the new soft protocol design and will use the new
+   protocol/feature references in the ModuleInfo struct where required. (M)
+ - Begin replacing old #define GOTFEATURE with new FEATURE and PROTOCOL systems
+   as part of soft protocol support. Currently it is still "hard" coded but 
+   will eventually move to the soft support system (M)
+ - Replace spart_cmd with part_bot_from_chan function (M)
+ - Add BANDUMP command to display ban table (M)
+ - Remove debugtochannel and optimise code path of functions using it (M)
+ - Remove ssjoin_cmd and sjoin_cmd functions. All channel joins must use
+   join_bot_to_chan. (M)
+ - Remove snewnick_cmd function. All new users must be introduced using 
+   init_bot (M)
+ - Change is_pub_chan so it returns TRUE for a public channel. (M)
+ - Begin IRCD "soft" protocol/feature design. (M)
+ - Remove old CMODE_CH_xxx and CMODE_FL_xxx defines that new sjoin system makes
+   redundant. (M)
+ - Host OS value now saved by configure for use in version reporting and for 
+   bug reporting. (M)
+ - Add support for NOQUIT so that NeoStats can delete users from disconnected
+   servers without requiring individual QUITs (M)
+ - Add support to recurse server list for SQUIT so that NeoStats can delete 
+   leaves of hubs which SQUIT (M)
+ - Tidy exported include files (via make install) to the currently required 
+   minimum. (M)
+ - Added DEBUGMOD option which allows selective debugging of a module so we can
+   limit debug output to a single module when required. (M)
+ - Command line option -v now reports a full IRCd string in the version so we
+   no longer need the flag "help" text. (M)
+   this is now handled by IRCdAuth. (M)
+ - Removed -l (log level) command line option. This is now an online "SET" 
+   option which saved and restored via config system. (M)
+ - Removed umode levels from IRCd protocol files and associated core code since 
+   this is now handled by IRCdAuth. (M)
+ - ExtAuth: Added support for an access list system such that the master 
+   service root can manage users who have access to NeoStats and their 
+   individual levels. This removes the need for the older SERVICE_ROOTS options
+   which have been superseded with the new SERVICEROOT option for master root
+   and the access list maintained via IRC (M)
+ - Authentication modules are now optional again. A single service root is 
+   required in the config file using a new SERVICEROOT option which follows the 
+   format of the old SERVICE_ROOTS option but is singlular and renamed to 
+   prevent upgraders relying on this working. This is used by the core to 
+   provide at least one user with NeoStats access regardless of authentication 
+   systems. (M)
+ - Add dlog function to handle debug messages. nlog is now purely for normal 
+   logging purposes (M)
+ - Add DEBUGCHAN setting for sending debug messages to channel and DEBUGTOCHAN
+   setting to enable/disable it's use. (M)
+ - Reorganised me and config structures. (M)
+ - Debug mode is now a SET option rather than a command. (M)
+ - Add set command to NeoStats to set user mode for service bots. 
+   /msg neostats set SERVICEBOTUMODE <mode>. default is defined in the IRCd 
+   specific services_umode string. (M)
+ - Add set command to NeoStats to set channel mode for service bots. 
+   /msg neostats set SERVICEBOTCMODE <mode>. default is defined in the IRCd 
+   specific services_cmode string. (M)
+ - Add services_cmode string to IRCd protocol files to set default channel
+   modes for service bot that reflect IRCd capabilities to simplify sjoin 
+   code and module code for joins. (M)
+ - New module auth system to support auth systems other than the 2.5 extauth.
+   The core is now unable to provide any authentication and an auth module must 
+   be loaded. The old IRCd umode based auth is now a loadable module so is 
+   optional. Where a module wants to have local control over authentication,
+   the 2.5.15+ ModAuth function has been renamed to ModLocalAuth to distinguish
+   it from auth only modules. New config load module options have been added
+   to support auth modules which require a slightly different style to standard
+   modules. templateauth provides the example code for auth modules. (M)
+ - configure now checks IRCD first so that if this required option is missed 
+   the user will be told immediately rather than after all other checks. (M)
+ - Build process updates so that at configure time we only do what we need to 
+   and reduce the number of config.h files we need to maintain. (M)
+ - New memory allocation wrappers functions scalloc, srealloc and sfree. (M)
+ - Add SET VERSIONSCAN option to core for CTCP version scanning. (M)
+ - StatServ: Optimise database save to further reduce code required and get 
+   back a little CPU. (M)
+ - StatServ: Adjust exclusions so that counts are accurate. The exclusions 
+   produced cases where the current channel count was greater than the network 
+   record! (M)
+ - IRCd version suffix now handled by configure rather than code. (M)
+ - Introduce new debug.log system to store all current messages and debug info
+   to avoid corrupting main system logs when in debug mode and allow users to 
+   submit this file for support rather than multiple ones from modules plus 
+   core. (M)
+ - StatServ: reorganised code so stats code is encapsulated from module 
+   specifics and introduced new burst request system during init. (M)
+ - Begin implementing "burst" request interface for modules to get current
+   user/channel/server etc lists. (M)
+ - Homogenize init error messages. (M)
+ - Update core support functions to use new run level system to determine 
+   current module removing the need for modules to pass their module pointer 
+   when adding bots/timers/socks etc. (M)
+ - Replace old segv_module system with new run level system. (M)
+ - Keeper subdirs are now subdirs of main data dir. (M)
+ - ConnectServ: reverse colour define so default is disabled. (M)
+ - Core modules now use core config loading system (M)
+ - All socket code now in socks.c for easier upgrade (M)
+ - Early support for module semi auto config designed to perform loading of 
+   module config settings or set defaults without the module having to code it. 
+   Due to the need for custom set values, we will likely have to call the core 
+   function from the module rather than perform automatically at load time. (M)
+ - Command processor set routine broken into helper functions for easier
+   maintainance (M)
+ - Rewritten command processor to use new command structure (M)
+ - Moved signal code to signals.c/h (M)
+ - New structure for passing to commands and events (M)
+ - Removed NeoStats logs command since it is useless with multiple logs. 
+   Possibly look onto a LogView module sometime in the future if there is 
+   demand for this facility (M)
+ - Begin adding return value processing for commands so core can handle common
+   errors such as syntax error (M)
+ - HostServ: removed old database format support (M)
+ - Event system updates. Change type to int enum for faster processing. Some 
+   events renamed to be closer to irc commands so meaning is more obvious for 
+   module programmers and to assist the move from module_functions to events. 
+   Enum type protects event system at compile time. (M)
+ - seperate auth system from main core so we can add new auth hooks (M)
+ - send_sjoin bug fix where user has no modes (M)
+ - Segfault reports are now directed to segfault.log rather than the main log
+   files for easier submission (M)
+ - subsystem structures now maintain a module pointer to lookup names rather
+   than copies of the string. We can now lookup modules via a quick pointer
+   compare rather than string compare and can access module information without
+   addition function overheads. (M)
+ - Modules must pass their module handle to the core for accessing bots/timers
+   etc, once all interfaces use this system, try to "automate" the handle using
+   some form of current_module/runlevel within the core (M)
+ - Core and modules now share bot init code (M)
+ - Updated bot interface to use a new bot_info structure (M)
+ - ExtAuth: remove old format support (M)
+ - Added instrinsic bot commands for ABOUT, CREDITS, VERSION (M)
+ - Logging scope is now automatic rather than requiring a specific option (M)
+ - Module support calls to access timers/bots/sockets etc must now pass 
+   correctly typed function pointers rather than using core symbol lookups (M)
+ - dl.c/h split into files dedicated to a part of the module sytstem e.g. 
+   bots.c. dl.c/h now becomes our wrapper library for handling libdl plus 
+   future DLL and static support (M)
+ - Added some extra fields to channel, user and server structures for future 
+   use (M)
+ - Point of no return. Legacy 2.5 systems are now broken. Some 2.5.15 compliant
+   systems will still work but all module backward compatibility has been 
+   stripped. 
+ - All core module changelogs moved to docs/old. Future core module updates 
+   will be included in the main NeoStats changelog (M)
+ - Remove module API hacks (M)
+ - Remove legacy stats.h, API is now exported via neostats.h only (M)
+ - Depreciate support for __module_functions and associated ModuleFunction 
+   overheads, version 3.0 will send information to modules via events only (M)
+ - Remove 2.5.5 and lower module compatibility systems (M)
+ - New source tree layout implemented (M)
+ - Begin version 3.0 development (M)
+
+* NeoStats * Version 3.0.2
+ - All Modules (Macs)
+
+===============================================================================
+For older versions (1.x and 2.x) see Changelog.old
+===============================================================================

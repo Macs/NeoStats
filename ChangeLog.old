@@ -1,0 +1,955 @@
+NeoStats ChangeLog - Anything we add/remove/fix/change is in here (even our rants)
+=====================================================================================
+* NeoStats * Fish (F) & Mark (M) * Version 2.5.15
+ - Remove sprotocol_cmd since it is very ircd specfic (M)
+ - Initialize me.now at bootup so we do not get random timestamps (M)
+ - Fix Unreal PROTOCTL sending so it works correctly (M)
+ - Add correct sjoin support to Unreal  (M)
+ - Introduce new ssjoin_cmd for sjoin processing (M)
+ - Fix midnight detection in core (M)
+ - kick_chan tidyups (M)
+ - Trap and silently drop (but log) CTCP commands send to NeoStats (M)
+ - tidy up of various error messages to help with tracking problems (M)
+ - Log message when no configured modules in neostats.cfg (M)
+ - UMODE_CH_xxxx defines for Smodes changed to SMODE_CH_xxxx (M)
+ - Fix a off by one error in quit messages (F)
+ - Temp fix for kick_chan when its a server performing the kick (BugID 108) (F)
+ - Increaes Storage Size for AddStringToList (F)
+ - Update all ircd channel modes, user modes, messages and tokens (M)
+ - Change ircd command processing to be more efficient and easier to maintain (M)
+ - Add support for storing server info line (M)
+ - Add support for hostmasking (M)
+ - Improve TS processing (M)
+ - Simplified IRCd support so they are easier to maintain and to port new ircds.
+   All outgoing messages go through send_xxx (e.g. send_notice) which just formats
+   the message as required for the ircd. All incoming messages now go through one
+   set of calls instead of two. An additional parameter srv states whether this was
+   a server message or not for when a command needs different handling (e.g. nick).
+   All such calls renamed to m_xxx e.g. m_nick to match ircd naming conventions
+   so we can easily find in ircd source. Most of these calls now just need to format 
+   the incoming text and let the NeoStats core process it (M)
+ - Added NICKV2 and UMODE2 support to Unreal (M)
+ - Set segv_module before calling bot chan messages (M)
+ - Added servicests support to Unreal and core (M)
+ - New style splif buffer function introduced to save splits and joins (M)
+ - Added system to overide the core parse and splitbuf functions for IRCu; will merge 
+   back into core when IRCu support complete (M)
+ - Bug fix in NICKV2 for Unreal; realname was not parsed properly (M)
+ - Privmsg checks moved to ircd command lists and core function provided for processing (M)
+ - Add notice check to ircd command lists (M)
+ - Cleaned up bot message and bot chan message handling (M)
+ - Main services bot is not a mod_usr which tidies up command processing and let's NeoStats 
+   show up in bot channel lists (M)
+ - Optimise core CTCP checks to avoid unnecessary processing (M)
+ - Add numeric support to server structures (M)
+ - Added a "Global" exclusion list to NeoStats so we can maintain a single exclusion list, instead of multiple ones like we have now with opsb, and SecureServ.
+ - Added strnow to me structure. This is a string version of me.now. (M)
+ - don't add a uplink to the NeoStats server struct, as this breaks statserv map (F)
+ - StatServ now uses GeoIP database from maxmind. More accurate now that previous, as we can calculate location based on IP address and not DNS (F)
+ - Fix the exclusion macro, & not && (M)
+ - New IsMe macro and associated user and server flags. We can now detect NeoStats users/servers without a string compare (M)
+ - Tidy up set and reset of segv_inmodule (M)
+ - Valgrind Fixes. Some. Not All. Long way to go (F)
+ - Add Viagra IRCD support contributed by OvErRiTe (M)
+ - Tidy up makefiles and build process (M)
+ - Add OpenBSD support (M)
+ - Add wrappers fo dlxxx calls so we can support a.out and OSes requiring leading underscore on symbols (M)
+ - Report errors for missing admin.motd fails in an appropriate manner with ERR_ numerics (M)
+ - Introduce new file (neostats.h) to export API to modules. This will replace 
+   the stats.h and dl.h that we use at the moment and bring in functions from 
+   other headers that we export but should be restricted to the core. Why a new
+   file? It allows us to track propogation to modules and maintain backward 
+   compatibility more easily (M)
+ - Port core modules to use neostats.h and tidy up includes (M)
+ - Add SVSTIME support so NeoStats can resolve TS problems - currently Unreal only (M)
+ - Add IRCu P10 support (M)
+ - Add support for Unreal's SWHOIS (M)
+ - Add core support to store network ban info (M)
+ - Add support for Unreal TKL bans (M)
+ - New bot flag so bots can ignore channel messages when they do not need them (M)
+ - Fix IRCu parsing and begin merging back to core (M)
+ - Changed debug dump outputs to be more readable and make helper functions for 
+   each dump type instead of having the dump code written twice (M)
+ - SERVERDUMP now takes an optional parameter of server name to work like chan/userdump (M)
+ - Add new version information for checking modules and the core are compatible (M)
+ - TLDmap for statserv now works on IRCd's that don't send a IP address in the connect Message (Unreal etc) (F)
+ - Core will now lookup ip addresses of users connecting to the network if the IRCd doesn't specify it, and a module says it wants it (StatServ, and port OPSB over as well) (F)
+ - StatServ now exports the TLD data to SqlSrv (F)
+ - Added more types to core command set processor - NICK, USER, HOST, REALNAME, IPV4 and MSG (for multiple strings) (M)
+ - Add Unreal EOS support for server synchs (M)
+ - Add Berkeley support for statserv (M)
+ - Add basic support for module side auth to use within SecureServ (M)
+ - Fix for bug 117 (Buffer overflow) (M)
+ - Add selection of rotuines to determine channel status e.g. is_chanop (M)
+ - StatServ now saves and loads client version records (M)
+ - Fix mode tracking for -k (Key) (M)
+ - Vhost/Hidden Host system redone and get Unreal to Send Hidden Host with VHP protocol option (F)
+ - AddStringToList now allocates memory as required rather than relying on a fixed limit (M)
+ 
+* NeoStats * Fish (F) * Version 2.5.14
+ - Fix a bug with HostServ unable to load the database
+
+* NeoStats * Fish (F) & Mark (M) * Version 2.5.13
+ - Added a new event for Channel Mode changes (F)
+ - Fixed up Ultimate2 Token Support (M)
+ - Added some new params (Quit, KILL, part messages) to existing defines. Should not break backwards compat (F)
+ - Fixed up a UserLevel problem with Smodes and made UserLevel function as per M's comments (F)
+ - The built in Bot Message functions were not setting SEGV_INMODULE correctly, so logging was kinda screwed up. Fixed (F)
+
+* NeoStats * Fish (F) & Mark (M) * Version 2.5.12
+ - Fixed a compile problem with some compilers with C++ comments etc (M)
+
+* NeoStats * Fish (F) & Mark (M) * Version 2.5.11
+ - removed unused "hash" entry from structures (M)
+ - new files to handle command related functions for new bot message system (M)
+ - introduced flags field into ModUser structure (M)
+ - generic bot message handler introduced to reduce module code bloat (M)
+ - log messages now have second resolution (M)
+ - Unreal support split between 3.1.x and 3.2.x since they require different support now (M)
+ - Unreal updates to reflect the current versions of Unreal (M)
+ - add MSG_SJOIN handling to Unreal (M)
+ - added command handler support function is_target_valid to validate a user (M)
+ - added __attribute__((format(printf,x,y))) and __attribute__((noreturn)) to header files (M)
+ - early version of bot set handler introduced (M)
+ - libcurl integration into NeoStats to handle FTP/HTTP (and future XML-RPC) transfers (F)
+ - log handling changed to fix some problems with it. Logs are now always in full dated format (M)
+ - all ircd feature defines changed to common naming convention GOTxxxx where xxxx is the feature 
+   to make it easier to remember and use them:
+       HAVE_TOKEN_SUP -> GOTTOKENSUPPORT
+       HAVE_BOT_MODE -> GOTBOTMODE (M)
+ - MODE char defines used by connect serv renamed from xxx_MODE to UMODE_CH_xxx to make them 
+   obviously distinct from channel modes, easier to grep for and encourage support in other 
+   parts of the code. (M)
+ - bug 86 fix - joinbuf was not validating input (M)
+ - Ultimate 3 defines for smodes have move to a feature define of GOTUSERSMODES since Quantum 
+   and Liquid appear to need them and we want to avoid IRCd specific defines. (M)
+ - moved all smode support into an appropriate #if block and removed susr_mds for ircds that 
+   do not need them. Only need if GOTUSERSMODES (M)
+ - UserMode split into two, UserMode and UserSMode to handle smodes. Makes IRCds with no smode
+   support more efficient (M)
+ - Lots of cleanups in IRCd code and fixes for ADMIN command which was missing on some IRCds (M)
+ - Some DOC updates for changes to commands (M)
+ - Added FRENCH README doc/README.french (was bored and had time) (Shmad)
+ - Fixed Hybrid Topic Crash? (BugID: 86) (F)
+ - Fix potential High CPU usage (F)
+ - Reformatted segfault reports to encourage users to submit full information with bug reports (M)
+ - IRCd cleanups for common commands like admin/stats/motd/pong (M)
+ - AddUser changes to fix bug 94 (M)
+ - New function UmodeMaskToString as a helper for Umode handling (M)
+ - Import new SQL Server emulation library, Real Time Access. (F)
+ - new configure option --enable-sqlsrv to enable sql server emulation (F)
+ - Fix up vhost handling on Ultimate (F)
+ - Addded Smodetostring function (F)
+ - NeoStats INFO command renamed to STATUS to match similar commands in modules (M)
+ - __module_get_functions/__module_functions is now optional rather than required (M)
+ - /VERSION will now provide module information from the core if possible (M)
+ - Channel modes now use CMODE_ prefix rather than MODE_ (M)
+ - Bots now unload after ModFini is called so they can still report messages (M)
+ - All log filenames are now lower case for consistency across modules (M)
+ - Changed Umode/SmodeStringtoMask function to accept current Umode, so we can do progressive mode changes (F) 
+ - StatServ data is now exported via SQL emulation as well. (F) 
+ - Created join_bot_to_chan function to allow modules to easily join their bot(s) to a given channel (M)
+ - Lots of cleanups in the IRCd code. Should be much easier to maintain existing and create new IRCd support (M)
+ - Fix up some compile problems with some of the IRCd's and fix lots of errors (F)
+ - Created a script to check out the latest version each night, and do test compiles and email the results to devel@lists.neostats.net (F)
+ - Add CloakHost function to provide hidden hostname support for bots - currently only supports Unreal (M)
+ - This should fix up the SQL emulation a bit. the RTA library needs to be re-written anyway, so this is a temp solution. 
+ - Introduce flags structure to users/chans/servers. For upcomming "Global Exclude" list (BugID 98)
+ - Fix bug in unreal netinfo netname processing (M)
+ - Fix some potential bugs with statserv channel stats found by Trystan
+ - Export loaded modules via SQL emulation
+
+* NeoStats * Fish (F) * Version 2.5.10
+ - Fix a problem with Umode +T being reintroduced on Unreal Beta19 as a normal usermode. 
+
+* NeoStats * Fish (F) & Mark (M)* Version 2.5.9
+ - import of libpcre into core (M)
+ - added some defines for common user levels (M)
+ - added some defines for common errors so functions can better handle failure conditions (M)
+ - cleanup of default settings and configs - defaults were often set twice! (M)
+ - fixed debug mode messages given to users under certain conditions (M)
+ - main command list now in a table to make it easy to add new commands (M)
+ - shorted some command text by stripping superfluous prefixes (M)
+ - ns_set_debug disable bug fixed (M)
+ - ns_set_debug function parameters changed to support command table (M)
+ - ns_set_debug now requires explicit ON/OFF to make consistent with other commands (M)
+ - removed chan from __Chan_Message parameters since it is in av[0] anyway (M)
+ - cleanups of core functions and module API including cleanup of module types and references (M)
+ - Updated command user levels and associated help text (M)
+ - Made M's bot message handling and help functions dynamic.. so modules can add/remove commands to the services bot... should make these functions a bit more generic so they could be called from any modules to handle messages. (F)
+ - imported LiquidIRCd support from herrohr (F)
+ - Admin text filename changed from "stats.admin" to "neostats.admin" (M)
+ - Added services_bot_modes to each IRCd. This should contain the required ircd specific modes for a services bot (M)
+ - fix a bug with statserv map (F)
+ - Output channel related data in daily and network information on HTML page for statserv (F)
+ - Added change_mod_timer_interval function to update timer interval for an existing timer (M)
+ - Added optional parameter to level command to lookup level of another user (M)
+
+* NeoStats * Fish (F) & Mark (M)* Version 2.5.8
+ - strncpy replaced by strlcpy - faster and safer (M)
+ - Replaced redundant strlen calls with faster and safer alternatives (M)
+ - Created optimised irc[v]s[n]printf functions to replace [v]s[n]printf (M)
+ - Created ircstr[n]casecmp functions to replace str[n]casecmp for IRC strings (M)
+ - Loading modules from IRC and config is now case insensitive. But filenames in dl directory must be all lower case (M)
+ - All files used by NeoStats are now #defines in stats.h to allow easy updates/changes (M)
+ - IRCD specific version strings are now stored in the ircd specific files (M)
+ - RAW command now uses sts rather than custom write code (M)
+ - More typo fixes and general cleanups (M)
+ - Removed large stack based buffers for better security and performance (M)
+ - References to coders are now depreciated and work differently so:
+       sendtocoders() renamed to debugtochannel() since that is what it actually does 
+       ns_debug_to_coders() renamed to ns_set_debug() 
+       me.coder_debug renamed to me/debug_mode (M)
+ - Began reworking do_exit code (M)
+ - Introduced FATAL_ERROR system for modules to call in the event an error is encountered which requires NeoStats to terminate (M)
+ - Change module list by removing redundant structure and just having a list of pointers (M)
+ - Event functions now use #defines rather than hard coded strings (M)
+ - added the ability to call functions that externally set up FD's to read. Why did I use Poll? because eventually all the socket stuff is going to get re-written, and the pollfds stuct is a lot better for flexibility than select! (F)
+ - This *could* be 2.5.8. Update version (F)
+ - replaced all calls to time(NULL) with me.now, which is updated a couple of times each loop. Should reduce the number of system calls a bit. (F)
+ - StatServ has had big performance improvements with regards to the database. Now progressively saves channel data, and only loads channel data when required. Should stop some of those mysterious 8 hour pingouts on large networks and reduce memory overhead ! (F)
+ - dont do assertion checking by default anymore. We are pretty stable. pass --enable-debug to configure to enable if you have weird crashes now (F)
+ - Some Memory Leak cleanups (F)
+ - install -C will not overwrite existing files... 
+
+* NeoStats * Fish (F) & Mark (M)*  Version 2.5.7
+ - Update parse() and splitbuf to suport IRCu (F)
+ - DCC exploit fix which should also address other segfaults with long messages to connected bots (M)
+ - Fix for statserv map command (M)
+
+* NeoStats * Fish (F) & Mark (M)* Version 2.5.6
+ - Added MrAllThats Colourisation of ConnectServ Messages (F)
+ - Fixed ConnectServ to not show notices for local events (BugID: 44) (F)
+ - Fixed a compile problem with StatServ (BugID: 47) (F)
+ - Strip Colors from clientversions in StatServ (F)
+ - Output clientversions in the HTML output (ReqID: 40) (F)
+ - First go and implementing Data API. SLOOOOW (DON'T USE THIS FOR PRODUCTION) (F)
+ - update doco slightly (F)
+ - Keeper wasn't doing so good at caching files. Fixed that (F)
+ - StatServ now stores and retrives all data from the Keeper Database. old data/*.db code kept to help upgrade to the new database backend (F)
+ - Some Cleanups suggested by Mark (M)
+ - Update Config script (F)
+ - Fixed ConnectServ nickwatch being Fubar (BugID 49) (F)
+ - We now moved to SubVersion and moved the repository to http://svn.neostats.net/ Check the homepage out for more details (F)
+ - Removed OperMe from svn repository (F)
+ - Updated Keeper to make sure it only writes files out that are readable by us (M)
+ - Fix BugID 52, ServiceRoots enabled twice for Hybrid7 compiles (M)
+ - Mark send a few patches for logging issues and dl.c issues as well as a updated Config script (M)
+ - Fix a printf statement that shouldn't be there (M)
+ - more patches from mark fixing up segvinmodules and the module init code standard (M/F)
+ - updates from mark on Log formatting (M)
+ - HostServ upgraded to use lists, keeper for datastorage. list output is sorted and a max of 20 entries are displayed per /msg hostserv list (M)
+ - More cleanups and IRCd portability updates from Mark. (M)
+ - Changes to help files to use a common format, fix typos etc (M)
+ - Added missing help text for MODBOTLIST etc (M)
+ - Overhaul of module system to improve error checks and minor bug fixes (M)
+ - Minor cleanups throughout the code (M)
+ - Completion of log filename format system. Filename format is now user configurable (M)
+ - Module unloading cleanup. We now have a common function unload_modules() to do this. (M)
+ - Paranoid buffer overflow checking - all strcpy and sprintf changed to strncpy and snprintf (M)
+ - Changed all instances of "neostats.cfg" to CONFIG_NAME (M)
+ - Changed "not Tech Admin" type errors to "not authorised" (M)
+ - Improved comments in makeconf and added support for custom log filenames (M)
+ - HostServ supports Undernet style hidden hosts for Registered users now. (F)
+ - Module API improvements removing the need for the get functions to get function tables etc (M)
+ - Changed all modules to use new module export API (M)
+ - Load/Unload module name and case fixes (M)
+ - Improved buffer overrun protection in use of strncpy and snprintf (M)
+ - Hybrid cleanups as suggested by Hwy. (F)
+ - Fixed a bug with Non-Zero counts with StatServ when loading up. (F)
+ - Tidy up Jupe Command. Now echo's a message back to the user when the jupe is done (F)
+ - Fix up a Segv_inmodule error in the dns stuff. Its a hack, but works (F)
+ - Don't set hidden hosts for opers (F)
+ - Statserv HTML fix for clientversions when its empty (F)
+ - Added support for numeric to config file (M)
+ - Added defines for parameter used in do_exit and ported calls accordingly (M)
+ - Improvements to return values and error checking (M)
+ - Removed unused TimerReset (M)
+ - renamed chk() to CheckTimers() (M)
+
+* NeoStats * Fish * Version 2.5.5
+ - Module API version number
+ - When modules load, __ModInit is called if exported.
+ - When Modules unload, __ModFini is called if exported.
+ - Added IsChanMember Function
+ - fix alias related problems. BUGID: 30
+ - fixed error message in makeconf BUGID: 32
+
+* NeoStats * Fish * Version 2.5.4 (Never Released)
+ - Fixed a core with using strcasecmp instead of strcmp in the parse function.
+ - Moved is_pub_chan from SecureServ to NeoStats
+ - Implemented Bahamut support and necessary functions
+ - make the ping time configurable. 
+ - Make Timers deletable from inside the timer function!
+ - Added DelConf to the keeper interface
+ - Maybe fixed a problem with usercounts on the neostats server
+
+* NeoStats * Fish * Version 2.5.4 Pre2
+ - Fixed a problem with statserv and the HTML settings
+ - Fixed a problem with statserv and channel member counts (didn't decrease for kicks)
+ - Implemented our own Assertion function to show backtraces and log it. Changed all asserts to nassert
+
+* NeoStats * Fish & Shmad * Version 2.5.4 (or 2.6.0)
+ - Initial import for Mystic 1.1.x IRCd support
+ - Updated all copyright notices.
+ - added updated makeconf script from M (mark@ctcp.net)
+ - Committed and updated all of M's Documentation Updates
+ - Added M's "Config" script for helping to automate the ./configure options
+ - Fixed a bug with StatServ's HTML settings BugID 23
+ - Fixed a problem with floodcontrol crashing NeoStats BugID 18
+ - Only opers can stats m
+ - First Pass of Spliting up ircd.c to make IRCD porting easier
+ - Added some Doco Updates from M, and connectserv cleanups
+ - Don't rotate empty log files!
+ - Finished first pass of IRCd portability updates
+ - users/servers/channels/modes now have a module data pointer
+ - Fixed (again) FloodControl Code: BugID 18. Now uses svskill. Should be more robust. 
+ - Tested long and hard the Ultimate3 IRCd port. Should be good. :)
+ - Added Quantum/Bahamut/IRCu framework
+ - Commited Bluds IRCd port for Mystic. Un-tested.
+ - Ultimate2 akills are moved to glines. BugID#29
+ - ModNum Structure created for tracking module numbers for module data pointers in users/server/channels/modes pointers 
+ - Unreal works (it seems)
+ - Ultimate2/3 Works
+ - Fixed the wrong oper counts with StatServ. ConnectServ was the culprit
+ - Commited J. Michael Jones (mj12@afnetinc.com) QuantumIRCd support
+
+* NeoStats * Fish * Version 2.5.3
+ - Added ability to turn off StatServ wallops. "/msg statserv set msgthrottle off" - BugID#6
+ - NLOG called from a Module Socket Function was Fubar. Fixed
+ - Fixed a Hybrid7 Compile problem -BugID#7
+ - Fixed a problem with sumodes_cmd for Ultimate/Unreal
+ - Added RealName Storing (dunno why we didn't do it before)
+ - Jupe was fixed - BugID#4
+ - make install was failing in the tools directory on some systems. Fixed - BugID#8
+ - missed -f switch in ./neostats -h summary usage
+ - This should teach people to "make install" :)
+ - changed the fork-Load_modules corder to fix some issues with calling_fini after we exit the foreground process after forking. 
+ - removed a un-used variable in the server struct
+
+* NeoStats * Fish * Version 2.5.2
+ - Added Keeper Library for storing configuration and optionally data, and reserved space for language file storage
+ - Added kptool, a command line tool from keeper libary to maintain configuration databases
+ - Added configtool, a GTK gui to maintain config database (from Keeper Libary)
+ - started work on configtool to suit NeoStats setup.
+ - added conf.h and keeper.c, the NeoStats API to the keeper database.
+ - Created and tested initial SetConf, GetConf functions to set and retrive config data. 
+ - added the ability for NeoStats to Bind to a IP address. Put "BINDTO <ipaddy>" in the neostats.cfg to effect this. Works for all network communication (including opsb)
+ - Continue to try to load modules even if one fails when booting up. 
+ - Added Command line options processing:
+	Quiet Mode: usefull for cron scripts
+	No Load: Don't load modules on startup
+	recv.log: enable recv.log 
+	debug level: what level to write debug messages.
+	help and version info
+ - Started the new logging function, nlog
+ - Added a function, do_exit, that should be called when exiting NeoStats to flush and close the logs and perform any cleanup that should be done. Hopefully one day we can get rid of the execve code!
+ - Converted over all log functions to nlog in the core
+ - Catch SigINT signal as well, so we can flush log files
+ - fixed a typo with unloading modules
+ - strtolower sucks arse man... :(
+ - ServiceRoots now prefers and uses the syntax <nick>!<ident>@<host>. Wildcards are permitted.
+ - all Logfiles are not rotated at midnight
+
+* NeoStats * Fish * Version 2.5.1
+ - ConnectServ's username was too long for NeoIRCd, fixed
+ - Fixed a usermode bug with NeoIRCd and the bots
+ - Fixed a username overflow?
+ - Fixed a username length problem with MoralServ
+ - Fixed a problem with opercounts in statserv
+ - Hardcoded select timeout at 1 second, as I think it was fubared with adns and opsb
+ - Moved Version information to a interface that we can use to check via Modules... so we can easily handle minor API changes (forthcomming)
+ - renamed stats.log to neostats.log... 
+
+* NeoStats * Fish * Version 2.5.0
+ - Fixed up UserLevels with SMODE support on Ultimate3 (sigh)
+ - Fixed a bug when adding entries to hostserv if the nick already exists
+ - Added rakill (or equivelent) support to Core for opsb remove function
+ - Fixed up a problem with joinbuf that was caused when we moved to snprintf :(
+
+* NeoStats * Fish & Shmad * Version 2.5.0-Release Candidate 3
+ - Added support to makeconf for WALLOP_INTERVAL (S)
+ - Fixed up --enable-auth==TYPE typo in configure script
+ - Moved to AutoConf2.13 to fix bsd ./configure issues
+ - Fixed Compile warning in adns on BSD systems
+ - Fixed up /msg neostats@stats.neostats.net messages to work correctly
+ - Fixed a big arse bug with Multiple SJOIN's for the same channel, and incorrect channel status modes getting set on users.
+ - StatServ now only Wallops records in a configurable amount of time. eg, 5 records in 5 minutes 
+ - Some of statserv stats were never displayed, fixed that
+ - Flood control now works by default for all module bots
+ - Fix a adns compile error and remove the warnings
+ - -Wall is only set when compiling with debug mode support. No need for the make.log file anymore
+ - ./configure --enable-bignet support for more than 2000 users
+ - Started Documenting internal functions for DoxyGen (About time I did this)
+ - Created 2.6.0 branch in CVS
+ - Module Loading global messages are now handled by core, not Modules
+ - Ultimate3 now uses SJOIN to join channels
+ - Fixed a bug with RELOAD
+ - StatServ updates 
+ - Ultimate Smode (a28) added, but what did I break?
+ - Some Solaris Porting fixes thanks to Hwy.. Time to get onto the Solaris Compile file at sf though :(
+ - Removed Bignet Support, and made lists dynamic now
+ - Added ChangePass and Banned Vhosts to HostServ, and moved HostServ to Hash tables. 
+ - Fixed a bug with users being marked away multiple times, thus, screwing up statserv stats :(
+ - Compile fixes and warnings
+ - memprof found me a few memory leaks. Fixed them up :)
+ - the solaris fixes broke a bunch of stuff, reversed them out for now
+ - join 0 support
+ - moraleserv bugs fixed
+ - ultimate3 SMODE support
+ - Ultiamte3 SMODE broke ConnectServ. Bah Humbug
+ - stopped double global messages when a module is loaded/unloaded
+ - some more memory leaks found with memprof and a 4000 user network!!!!
+ - Drastically reduced the amount of memory that Neostats now uses. 4000 users used to be around 12Mbs, got it down to 3.6Mbs
+ - Fixed up connectserv for SMODE support
+ - Fixed a buffer overflow found by jerome
+
+* NeoStats * Shmad & Fish * Version 2.5.0-Release Candidate 2 
+ - Misc. Updates (S)
+ - Added new conftype option NO_LOAD if not commented out, Neo wont load.  This is to force people
+   to read the manual and to PROPERLY configure their conf file. (S)
+ - Due to major issues with Versions of UltimateIRCd3.x.x prior to a26 SSJ3 and SSJ4 support has
+   again been removed.  Lets just leave it at SSJ5 now! (S)
+ - stats.motd is now neostats.motd demo neostats.motd included with distro (S)
+ - Code cleanup. (S)
+ - Fixed Ultimate2 CHGHOST for vhosts.. ugh im going insane..tested & working (S)
+ - Misc. Module updates (S)
+ - Ultimate 2 uses CHGHOST not SETHOST, updated internals to reflect this. (S)
+ - Ported NeoStats to NeoIRCD, but still needs a lot of work (It links, modules not tested/ported yet) (F)
+ - Fixed a mode problem on unreal reported by [Apache]
+ - Fixed the fix for the fix of the mode problem 
+ - We only enable recv.log if in debug mode now... Neo is pretty stable as to not need this anymore. 
+ - Fixed up NeoIRCd protocol support for hostserv etc
+ - updated some of the modules to work with NeoIRCd
+ - ./configure --enable-raw to enable raw command now as it was tending to be abused
+ - Fixed a Serviceroots buffer overflow
+
+* NeoStats * Shmad & Fish * Version 2.5.0-Release Candidate 1
+ - Fixed problem where NeoStats (Or the bots) were not signing onto the network with Hyrbid7 IRCD (F)
+ - /me beats up fish cuz shadow wants to rid the world of a25 and lower (S)
+ - /me beats up shmad and teaches him how to maintain backwards compatibility (F)
+ - NeoStats NOW only supports UltimateIRCd 3.x.x a26+ for SSJ5 compatibility. (S)
+ - Modified users.c so we could call NICK changes to events :) (S)
+ - fixed 'make install' now copies the html template over (reported by eggy) (S)
+ - Changed stats.pid to NeoStats.pid (reported by eggy) (S)
+ - StatServ STATS DEL will now only delete OFFLINE servers for sanitys sake (S)
+ - StatServ RESET now only tells you HOW to properly reset the statistics database for servers. (S)
+ - other minor fixes to makeconf script that could potentially stop it from running on some hosts. (S)
+ - fixed makeconf to work after 'make install' is ran (reported by eggy) (S)
+ - fixed up some Unreal tokens (F)
+ - Added GPL header to all files afer opsb debacle (F)
+ - fixed up the backtrace function (F)
+ - Fixed up the timer.c segv in module code (F)
+ - Fixed up segv locatation code in dns.c (F)
+ - Fixed up a few mem leaks in dns.c
+ - Fixed up some weirdness in how NeoStats gets introduced to the network
+ - Fixed a bug where NeoStats would join the #services channel twice (hu?)
+ - Moved Unreal port from using Akills to TKL's to hopefully avoid problems with newwer unreal versions that don't use akill.
+
+* NeoStats * Fish * Version 2.5.0-Beta5
+ - Fixed a problem with prefmsg in Unreal only.
+ - Fixed more bsd related bugs 
+ - socket support updates in prep for opsb
+ - User structure now contains TS 
+ - User structure now contains ipaddr if server supports NICKIP
+ - Sockets must now be created with new socket functions. 
+ - added akill to Ultimate/Unreal, and a Akill hack (send kline to all servers) for Hybrid.
+
+* NeoStats * Fish * Version 2.5.0-Beta4
+ - Fixed Bsd support and a few Hybrid weirdiness
+
+* NeoStats * Fish & Shmad * Version 2.5.0-Beta3
+ - *Bsd support fixed up. (thanks to Mikeal for the shell to test on)
+ - Added stats M (which I added a long time ago, dun know where it went)
+ - Added eggy to the credits 
+ - A few level permissions problems with Ultimate were fixed
+ - Hybrd Dun use Tokens. Duh!
+ - Message from help section were not being sent as correct type. (PRIVMSG/NOTICE) according to config file. Fixed. (and fixed a crazy crackhead shmad bug!)
+ - Fixed up a few issues with logging FindServer messages, and trying to track down a Desync
+ - Added Hybrid7 ircd support (fish)
+ - Fixed up Unreal stuff (fish)
+ - Fixed up Unreal stuff (fish) Reported by eggy yet again
+ - Added ADNS libary to core Neostats. Now can do DNS lookups without timing out neostats itself (it calls back when it gets a answer) (fish)
+ - we now close stdin, stdout, and stderr when we fork, as we should have always done (Fish)
+ - Fixed HostServ not giving people their vhosts (reported by eggy whos brave enuf to run cvs) (Shmad)
+ - Fixed issue in services.c where neostats wouldnt get restarted as it tried to run "stats" (Shmad)
+ - Config file is now 'neostats.cfg' (Shmad)
+ - Binary is now 'neostats'
+ - Removed someones crackheaded checking for internal in ircd.c which we dont need now
+   that I've fixed the GHOST bug. (Shmad)
+ - Fixed that ANNOYING GHOST bug if a service Messages or Notices itself. fun fun stuff (Shmad).
+   Thanks to ShadowMaster (UltimateIRCd) for his insight on this.
+ - Missed some Locking code.. removed it all now (Shmad)
+ - Fought with sourceforge CVS for awhile.. (Shmad)
+ - StatServ wont flood records now - hehe
+ - Fixed StatServ STATS - wont say incorrect syntax now unless it is! Fish must've been tired that night. (Shmad) 
+ - Fixed problem with some Ultimate modes in ConnectServ again that fish missed (Shmad)
+ - Removed remaining tidbits of old locking code (Shmad)
+ - Module event vars are now passed as a array of strings. Brings more flexibility to Module Events. (fish)
+ - Fixed a bug with -ob channel mode changes, due to me not incrementing a counter. (fish)
+ - Modules/Bots now can support Channel messages via the callback function __Chan_Message(char *chan, char **av, int ac) 
+   in the module (fish)
+ - added a test to see when we are fully synced to the network so it doesn't flood network with statserv/connect server 
+   messages (look at is_synced) (fish)
+ - Tidy ups and clean ups. (fish)
+ - Trust no one (especially people who keep changing event code :P) (Shmad)
+ - Time to start porting modules to new event code (again! - Last time, I promise) (fish)
+
+* NeoStats * Shmad * Version 2.5.0-Beta2c (Beta 2.2)
+ - Thanks to StarMaster for a nice suse box to test on.
+ - Fixed issue in ircd.c for compiling with Ultimate 2.x.x support.
+ - Fixed issue in Ultimate.c for compiling with Ultimate 2.x.x support. 
+ - Fixed problem with StatServ crashing on Ultimate2. 
+
+* NeoStats * Fish * Version 2.5.0-Beta2b
+ - Major Reworking internals. Passing Variables now as a struct. Doing a lot of Pre-Processing before Passing Vars to functions or Modules
+ - If message is from a user, assign userlevel in parse function, and made a macro to call a DEFINE that returns u->ulevel;
+ - Improved Services Support
+
+* Neostats * Fish * Version 2.5.0-Beta2a
+ - Fixed a few mem leaks
+ - Removed smalloc, replaced with normal malloc
+ - Fixed a memleak in statserv htmlstats (man, that function is a pain in the arse)
+
+* NeoStats * Everyone * Version 2.5.0-Beta2
+ - Working on ZipLink support for Ultimate 3.x.x
+ - Fixed a small problem in Ultimate 3.x.x Opermode support. Should be 100% now. (Shmad)
+ - Fixed Ultimate IRCd 3.x.x Opermode support. (Shmad)
+ - Fixed resetlogs() segfault bug.. (Shmad)
+ - Fixed StatServ segfaulting on first load w/o databases (Fish)
+ - Fixed makeconf, there was a typo that effected HTML writeouts (Shmad)
+ - Fixed StatServ memleak to do with HTML stats (well, not really fixed, but worked around) (fish)
+ - Fixed statserv ipv6 host crash (fish)
+ - Fixed up ./configure script to fail if a user doesn't specify a ircd (fish)
+ - added tldmap to html output of statserv (fish)
+ - Fix for stats thinking it was connected to a zombie server, and restarting over and over again when you first start it up
+ - Heaps and heaps of other fixes that I can't remember now. (fish)
+ - This version should *be* a lot more stable than Beta1 (fish)
+ - Moved apartments and lost my Linux Laptop HDD, hence why the updates have taken so long (fish)
+ - Fixed a bug with channel modes limited to 50. This was bad, as some channels voice/op a lot more than 50 users! increased max to the max channel membership list (currently 1000) (fish)
+ - Fixed a bug with the html stats in statserv. Fixes a HUGE problem with large networks, and seeminly random crashs after 1 hour (1 hour, becauses thats when the html pages are updated!) (Fish)
+
+* NeoStats * Fish & Shmad * Version 2.5.0-Beta1
+ - Fixed makeconf for new stats.cfg options (Shmad)
+ - Updated FAQ (Shmad)
+ - Updated Misc. other things and fixed Fish's typos (Shmad)
+ - Some updates to sock.c to detect zombie servers (Servers that we havn't recieved anything from for 180 seconds) and restart if thats the case (fish)
+ - restart, reconnect code updated to unload the modules and re-execute stats from scrath (fish)
+ - updates to statserv to support channels (top channel data) (fish)
+ - template support for StatServ html output (fish)
+
+* NeoStats * Fish * Version 2.5.0-Alpha6
+ - Removed the config option ModulePath, as its always dl/, so its hardcoded in.
+ - Fixed up Ultimate IRCD support (beta only. Shmad/Enigma to test
+ - External Authentication updated and implemented
+ - ./configure interface updated, and all --enable-<module> removed. Now use --enable-module="statserv spam hostserv" etc etc etc
+ 
+* NeoStats * Shmad & Enigma * Version 2.5.0-Alpha5c
+ - Module Unlocking on segfaults now (Shmad)
+ - Moved modules to new core dir (damn you fish) (Shmad)
+ - Cleanup of old lock code (^Enigma^)
+
+* NeoStats * Fish * Version 2.5.0-Alpha5b
+ - Fixes with the autoconf/makefile stuff
+
+* NeoStats * Fish * Version 2.5.0-Alpha5
+ - Updated the ./configure/Makefile setup. Full autoconf support now
+ - NeoStats now installs into ~/NeoStats
+ - Beta skeleton for add on modules to get NeoStats configuration from ~/NeoStats/include/*.h (include files)
+ - Bug fix with Channel Modes saving.
+ - Bug Fix with Channeldump (actually, it was when creating new channels. We didn't set the member count to 0, so it was a random number :)
+
+* NeoStats * Fish * Version 2.5.0-Alpha4.8 
+ - More bug fixes with Channel support. It looks pretty stable now :)
+
+* NeoStats * Fish * Version 2.5.0-Alpha4.7 (hu, what happened to 4.6?)
+ - Bug fixes (maybe) with channel support
+ - New option to userdump to specify a user to dump out particulars
+ - RECVLOG define, saves a copy of all incomming lines from the server. Defined in stats.h for testing only.
+ - CODERHACK define, allows coders (^Enigma^, Shmad, Fish full (200) access to NeoStats for Debuging. defined in stats.h
+ - Memleaks fixed in Chan support
+
+* NeoStats * Fish * Version 2.5.0-Alpha4.5
+ - Added Channel Support. 
+
+* NeoStats * Fish * Version 2.5.0-Alpha4
+ - Fixed a bug with the hashs and when a user changes Nicks
+ - Moved all variable passing to arrays. Ms and statserv modules updated, but need more work.
+ - That was a huge change. No time to beat those last bugs into remission
+
+* NeoStats * Fish * Version 2.5.0-Alpha3
+ - Moved Module/Bot/Timer/Sockets to Kazlib as well
+ - CrossIRCD support has been implemented. Basic commands for Core Neo implemented
+ - Moved usr_mds structure to Unreal/Ultimate.c files
+ - had to hack in a if (usr_mds) into each file that has stats.h  included becoase of a crazy compiler warning
+ - a Crackhead Shmad fix for globops that was segv'ing the proggy
+ - Ultimate IRCD support still broken.. Fix scheduled soon
+
+
+* NeoStats * Fish * NeoStats 2.5 Alpha 2
+ - Merged 2.0.14 and 2.5Alpha 1 together (as they were seperate Branches before that
+ - More Ultimate CrossIRCD updates (broken in Alpha3)
+
+* NeoStats * Shmad *  NeoStats 2.5 Alpha 1
+-  - Added new SERVICES_ROOT option to config. list your roots here " " the line (Shmad)
+-  - Started implementing new user access (old will still exist) (Shmad)
+
+
+* NeoStats * Shmad ^Enigma^ - NeoStats 2.1 Beta 2
+-  - Fixed another problem with strlower() :)
+-  - Fixed a problem with StatServ segfaulting on Boot
+-  - Issue with UNLOCKing modules. module_name = NICk not the modules filename..
+-  - Module locking is using file permissions, much wiser/easier than original .lock
+-    files. (Shmad)
+-  - Modules are now being unlocked when unloaded (can write to them). (Shmad)
+-  - Modules are now being locked when loaded (can't write to them). (Shmad)
+-  - All Module Locking code (except the actual chmod) have been coded... just the
+-    permission chmod to code. Removed crackhead code written initially (^Enigma^)
+-  - Added beginnings of Module locking.. (Shmad/^Enigma^)
+-  - OperLog Module coded ready for Alpha testing (^Enigma^)
+-  - Added /admin command support for external admin file (^Enigma^)
+-  - Created a purdy HTML table whcich shows what needs to be coded, if it
+-    has been coded and how long it would take. (Shmad)
+-  - Fixed a few other misc. bugs too numerous to list. (Shmad)
+-  - Fixes to StatServ segfaults as per strlower below. (Shmad)
+-  - Fixed problems with strlower (re-wrote this stupid POS it doesnt strip first
+-    char now) (Shmad)
+-  - Re-Worded the segmentation fault message... now shows the 'real' core location
+-    (^Enigma^)
+-  - When NeoStats seggies or is shutdown, the stats.pid file is now removed
+-    (^Enigma^)
+-  - 'README' file modified... now tells users what to do with the 'core' file (Both)
+
+
+- * NeoStats * Shmad & ^Enigma^ * Version 2.1
+-  - Moved MOTD to external stats.motd (Shmad)
+-  - Fixed some spelling errors. (Shmad)
+-  - Changed access levels for CHANDUMP, USERDUMP, and SERVERDUMP to be NetAdmins use
+-    wisely!!! (Shmad)
+-  - New Bug report forums added to www.NeoStats.Net (^Enigma^)
+-  - Fixes to StatServ... stats now more accurate than before. (Shmad)
+-  - Changes to the name "netstats" in some files... is now "neostats"
+-    *thwaps the lazy shmad* (^Enigma^)
+-  - Not a big change.. but.. CVS headers taken out... new nice-looking header format
+-    put in (^Enigma^)
+-  - HTMLSTATS coded for StatServ... will now output HTML stats when turned on. Will
+-    update automatically every hour if the output is turned on. TAs/NAs can turn the
+-    ouput command on and off and can force an update of the HTML file by using the
+-    FORCEUPDATE command. (^Enigma^)
+-  - ConnectServ has been created... will now watch for user signon/signoff, oper flag
+-    settings and /kills Takes pressure off StatServ (less cycles) and NA's/TA's have
+-    the OPTION to choose if they want to that information or not. (^Enigma^)
+-  - Fixed Neostats UPTIME in the INFO command... it now works w00t! (^Enigma^)
+-  - Incremented Version number to 2.1
+
+
+* NeoStats * Fish * Version 2.0.14-jh1
+ - Lots of Updates and fixes
+ - kazlib is now used for Users/Servers list. Has self checks for corruption
+ - when a module crashes (segv) now, Neo doesn't crash as well, but it
+	will unload the module and contine in most cases (depends on how the
+	module crashed, its possible that the module could corrupt the
+	core neo memory still (credit for that peice of code to MonkeyIRCD
+ - sending a message to the spam module will test the above changes. Feedback please!
+ - Cross IRCD support started. Lots of work to do on it though. Initial ircd will be Ultimate!
+ - configure interface changed to support cross ircd support
+ 
+* NeoStats * Fish & Shmad * Version 2.0.13 
+ - Fixed a massive problem with crashing and flooding off the entire network!!! (Shmad)
+    -> Reported by |clown|
+ - Fixed Slackware support. (Shmad)
+ - Added Vhost Support to Neostats... Now reads in a users Vhost, and stores it in u->vhost (Fish)
+ - Minor fixes (Fish)
+ - Added begining of Services to Neostats... see dl/services/ChangeLog for more info on whats going on there (Fish)
+ - fixed a segfault in ircd.c - parse... corelen was un-ititilized (Fish)
+
+
+* NeoStats * Shmad * Version 2.0.12
+ - Fixed problems with access levels
+ - Fixed bugs allowing some "normal" users to issue evil raw commands.
+ - Just a security update.
+
+
+* NeoStats * Shmad * Version 2.0.11
+ - STATS u now works on NeoStats. :)
+ - Fixed log(); notice when a TLD wasnt found. Sorry John :P~
+ - Added new TLDs
+ - Fixed misc. stats.
+ - Incremented version #
+ - Better memory management. We dont eat as much. Still a few leaks
+   Working on the remaining few.
+ - Minor update to module loading code.
+ - Fixed multiple arguements not being passed (previous fix caused this)
+ - Fixed SEGFAULT when msg'ing Module services with blank lines. (Reported by: JK)
+ - Upgraded NeoStats HELP.. all commands are now available to NetAdmin and Techadmin.
+ - For all those of you who run 2.0.6 THIS is the recommended _STABLE_ build.
+ - Fixed timer segfault.. Aiiee!
+ - Fixed Segfault some people were having when StatServ was loaded manually.. whoopsies.
+ - Why.. Oh Why was StatServ setting people +v?  No idea where that code came from.. removed.
+ - Fixed Modules not loading 100% now.  100% meaning it worked on all systems tested on.  This
+   should help those of you who experienced these problems. (Reported by: xXTasty)
+ - StatServ echoing all commands to the channel it was in was pissing me (and others off), it
+   is now removed.. Might make this a config option at a later date. (Requested by: anonymous)
+ - Fixed cosmetic bugs in SERVER command.
+ - Fixed % stats in SERVER command in StatServ.
+ - Damn I hate my job..
+ - Fixed Layout of MAP.. man was it messy fish..
+ - Fixed last? memory leak.
+ - Fixed the bugs in the makeconf script.. woops. :-) (Reported by: A lot of people :P)
+ - Pondered moving NeoStats motd to its own file rather than hard coded.. look for it in next ver.
+ - Fixed remaining mem leaks in MODULES.
+ - Got a job..
+ - Fixed modules not loading on NeoStats boot.
+ - Fixed StatServ MODULE sefaulting NeoStats... redundent code fishy. :-)
+ - Fixed MOTD -- Might move this to an external stats.motd file later.
+ - Fixed logging error where on SEGFAULT it would flood stats.log with about 40,000 lines. :-)
+ - Finished Remaining Modules we ship off with NeoStats.
+ - Job hunting -- loads of fun :-)
+ - Major Update was needed.. so here we start. :)
+ 
+
+* NeoStats * Shmad * Version 2.0.6
+ - Module NetInfo cleaned up a bit - looks purdy now
+ - 2.0 HAS DOCS!! Check them out in doc/ they are still roughish, more to add as time comes.
+ - stats.cfg cleaned up a bit.
+ - A few more mem leaks fixed.. not all of them yet.. working on it.
+ - Lazy people can now ./makeconf -- be sure to check stats.cfg to make sure everything
+   is right tho :)
+ - Fixed PRIVMSG bug, well not really a bug Unreal needs a check. (F)
+ - Added FreeBSD support (Thanks to TheRock (acestar) and madness.tmok.com for test shells).
+ - Added OpenBSD support (Thanks to bball for test shell).
+ - Added NetBSD support  (Thanks to Anoninimity for test shell).
+ - Started documenting the modules.
+ - We need people to staff our support channel #NeoStats on irc.cyberchat-irc.net
+ - Upgraded to version 2.0.6 flying along now :)
+
+
+* NeoStats * Shmad * Version 2.0 Beta 5
+ - Fixed up StatServ some more, now it displays all the information that previous
+   versions of NeoStats did, although, it might not be accurate yet (still working on it)
+ - Fixed up Module Bots not working if the recieved Nick case was different to what was
+   in the hash table!
+ - Fixed a whole crapload of Segfault bugs ;)
+ - Added NetInfo, this module SAJOINs users to channels based on their TLD.
+ - Added better module control.
+ - Still working on the Memory Leaks, its a pain, you may have to restart NeoStats every 4 to 6 days so
+   it doesn't eat up all your ram.  It ate up 256 MB of Ram on the coding system in 2 weeks.
+
+
+* NeoStats * Fish * Its Under CVS Control now... Still a Beta/Alpha Version though!
+ - Implemented Levels for Users, and finally fixed it all up.. if your
+   Coding a module, and need some sort of Security, use "UserLevel(u)" which
+   will return the Level of the user..... see users.c for a list of current O
+   lines, that map to Levels (highest is 200)
+ - More work on StatServ to make it produce some useable stats.. almost
+   there... I know Shmad and HeadBanger are going to kick my butt when they
+   find out that I have been away for over a week and hardly done anything on
+   it during those lonely nights in the hotel, but f*ck em :)
+ - More work on the Event Triggers... I'm happier with the interface now
+ - Flew around Asia.. Singapore, Malasia, and Phillipines!
+
+* NeoStats * Fish * Version 2.0Alpha4 (we decided this is a Major Release, hence the 2.0 version)
+ - Fixed up The Module Code (as Usual)
+ - Created new Functions to Load Modules at Boot time...
+ - Finally ripped out StatServ code out of base code, and started on writting its module..
+ - Also ripped out ICQServ... Havn't start the Module for this yet
+ - Been thinking about the best way to setup the event Triggers
+ - Learnt how to use CVS, and now I love it
+ - Started to Use X windows with Kdevelop as my IDE... (like you care right)
+ - started playing with autoconf and automake stuff... hrm.. looks pretty nice
+ - Expecting to release a beta real soon (As soon as I make StatServ useable)
+ - Now have a project page at http://www.sourceforge.net/project/?group_id=2137
+ - Get the Latest Development Version of our Code at:
+      CVS: cvs -d:pserver:anonymous@cvs.neostats.sourceforge.net:/cvsroot/NeoStats/ login
+           when prompted for a password, just hit Enter
+           cvs -d:pserver:anonymous@cvs.neostats.sourceforge.net:/cvsroot/NeoStats co 2.0
+
+
+* NeoStats * Fish * Version 1.2.Alpha 4
+ - The Beginnings of a Decent Module API - See dl/modules.txt for more info
+ - added a BOT api for the Modules. Any Module that puts a bot on the network must use this API
+ - Added a Timer API for Modules.. So Modules can register a function to be triggered a specific intervals with NeoStats
+ - Wrote dl/modules.txt - A pretty lame guide to writting your own Modules. Eventaully the Modules API will be Documented in here
+ - Cleaned up a lot of bugs with the Dynamic Loading of Modules
+ - Spam Module is now its own Self Contained Module
+ - Re-done the Config file Reading in Preparation for Module Config items
+ - Made a *nice* boot up screen cause I was bored with Pointers for a while!!!
+ - Signal Handling... We now Die on SIGTERM, SIGHUP should rehash, but its also doing something strange I can't figure out, and best of all... SIGSEV, handling our Coredumps and so one now (Yeah, I stole the Code from Unreal!)
+ - Back in a Hotel Room in Singapore, wondering when a Wircd version of Unreal 2.1.7 will be released?
+
+
+* NeoStats * Fish * Version 1.2.Alpha 3
+ - Total Re-Write of Intenals, Namely, ircd.c
+ - Now Support Dynamically Loading and Unloading Modules
+ - Moved Spam User to a Module
+ - Moving StatServ to a Module
+ - New Default User, with no Modules Loaded, called, of Course, "NeoStats"
+ - Fixed up Socket Code
+ - Fixed up Server Info line, so it isn't corruped in /links
+ - Started work on IcqServ, a new Module, providing ICQ services to irc users
+ - wrote 2 Test Modules, version and version2 to test Loading and Unloading of Modules
+ - smoked a few Ciggies while trying to work out bugs!
+
+* NeoStats * Fish * Version 1.2.Alpha 2
+ - if Unreal Protocol is 2109 or higher, uses SMO 1 for Debuging stuff
+ - Automatically Upgrades Old Databases from NeoStats 1.1.2 and lower
+ - Worked some more on Channel Hashes, Still a long way to go
+ - Added SVS2MODE support.. Again Untested, but same code as SVSMODE, so it should work
+ - Sweated in the heat.. 
+
+* NeoStats * Fish * Version 1.2 Alpha 1
+ - Gah, Flying to Canada this time!!!
+ - Started to add the Beginings of Channel Hashes.
+ - Started to Improve debuging output
+ - Added/Fixed User/Server/Channels Dump to Coders
+ - Updated Statistics Information, adding Total Number of connect to the
+   Network/Servers with Dailystats as well...
+
+
+* NeoStats * Shmad * Version 1.1.2 Beta 3
+ - Thought we should up the version number, been Beta 2 here for quite a while.
+ - Fixed cosmetic problem in HELP
+ - Fixed a RESET bug. ooops :/
+ - Fixed OPERLIST dupe logging channel msg bug
+ - Made OPERLIST BOTS into BOTLIST works great, Fish shouldn't put non-oper related stuff
+   in the OPERLIST functions. :P  had to do some minor code tweaks, but works great.
+ - Apparently fixed problem where occasionally new records would make the server "peer out"
+* NeoStats * Fish * Version 1.1.2 Beta 3
+ - Flying back to aussie. ;)
+
+
+
+* NeoStats * Fish * Version 1.1.2 Beta 2
+ - Removed all the Proxy Scanning Stuff, it was Broken, and useless anyway
+ - Added /credits option to the server, and updated Credits information
+ - Added Bots list to operlist
+ - fixed a few Typos with operlist, and got noaway working again
+ - Changed the UserModes of the statistics user to be +Sq and +a in the Services Channel
+ - Changed the version to be Geostats-1.1.2-beta
+ - Added a New Option to config file. If Defined, will occasionally broadcast the  lag of
+   each server in the services channel
+ - Fixed up a bug with operlists being -1 (found the little sucker too)
+ - Fixed a Problem with Shutdown CoreDumping the Server.. Grrrr, Shmad, Just cause we are
+   shutting down doesn't mean u have to CoreDump the Server!
+ - Added Support for SVSMODE, Untested though!!!
+ - Change the New User record to be Walloped Instead of Globops, so normal users can see it
+   as well (Thanks to EvilAndy for the Suggestion!) 
+ - Hrm, seems the Kick and Rejoin was Broken. Fixed it up again... (Why is Kick giving me 
+   sooo many problems?)
+ - Fixed up messages when a Non-Oper joins the Services Channel. Now askes them to leave
+   (I'd prefer to kick them out, but some other Services are not always Opered Up... Still
+   thinking of a workaround for this
+ - Wrote a Email to Shmad Kicking him up the Butt to update this File!!!
+ - Again, watched Boring Television the whole time!!
+* NeoStats * Shmad * Version 1.1.2 Beta 2
+ - Cleaned up a few messy/unused routines in the code.
+ - Base for HTML writeups started, will be completed in next full release.
+ - Wrote Documentation.  see doc/  run read-faq or read-userman you can also print up FAQ or USERMAN. :P
+ - Cursed at the car for the clutch popping today..
+ - Went through every line of code looking for mis-spellings.. email me if you would like to do that. :-]
+ - Harassed Fish some more about fixing his bugs. :P
+ - Started a base for SUSPEND command, will be finished in next release.
+ - Cleaned up this ChangeLog a bit, you can actually read it now! And that Fish guy better not
+   mess it up! :P
+ - Oh my god, I left like a huge section of code in there all commented out. Removed it (old buggy code)
+
+
+
+
+* NeoStats * Fish * Version 1.1.2 Beta 1
+ - Fixed problem with not reading netinfo, or Server info lines from Config Files
+ - Added LAG_TIME to Config file. If a server is Lagged out over this amount from statserv, then
+   a Globops Message is sent (Should be changed to use RPONG
+ - Added 2 new Options to Operlist, NET and TECH, to List only netadmins and Techadmins
+ - Fixed a Problem when StatServer kicked a User for Flooding, it didn't Delete that User from its
+   Database
+ - Watched a really fucked up Moving on HBO about Man Size Killer Rats!
+* NeoStats * Shmad * Version 1.1.2 Beta 1
+ - Renamed to NeoStats. :P
+ - Fixed Kick problem where if you kick a person from your chan Stats would complain about being kicked
+ - Added VERSION command
+ - Added SHUTDOWN <reason>
+ - Added RELOAD <reason> Stats Terminate and reload.
+ - Fixed some minor cosmetic things in HELP
+ - Added STATSERV_NETNAME to the stats.cfg (no more editting the ircd.c :P )
+ - Added SERVER_INFOLINE to the stats.cfg (set statservs server info line in there now)
+ - Sat around and watched TV for a few hours, space has some weird shows. ;)
+ - Added RESET command wipes the .db clean. :P (It will temp flood in globops with new stats when done)
+
+
+
+GeoStats - Fish -  version 1.1.1
+ - Removed the User Database, now uses IRCD Umodes
+ - Umodes T (technical Admin) now is equivilent to god in the old stats
+ - Umodes 1 (IRCD Coder) is used for Debuging Information
+ - Supports Unreal IRCD 2.1.5-Tabby and higher only atm
+ - Now joins a PreDefined Channel, and reports information such as connects and quits to the Channel
+ - Reports via Globops when a User/Oper/Server Record is broken!
+ - Reports via Globops when a User is set +q or +I
+ - Prints channels that a User Joins and Parts when +I in the Services Channel
+ - added JOIN Commmand
+	- Allows you to select what Channels you want the Reporting software
+ - added RAW Command
+	- Allows you to send Raw Commands from the Server, only Tech Admins have this ability
+ - Added Debug Command
+	- At the Moment, only unhandled Commands are sent to +1 users
+	- Next release a lot more information (such as what is sent to the Log files) will be sent to users +1
+ - A lame attempt at getting statserv to slow down when sending you the log files, as it floods you of
+   the server
+ - added notice subrotine, used to send messages to the Services Channel
+ - When a Oper Joins the Services Channel, statserv ops him, when a Normal User joins, statserv askes him
+   to leave... TODO: setup a Ignore list, so Bots and Services can join without having to have a Umode +o
+ - Proxy doesn't work on my machine due to lack of Threads, and no need for them, so I might have broken
+   it. Can someone let me know?
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+GeoStats - version 1.1.0
+ - Fixed hashing problem.
+ - Added configuration option - OPERSONLY
+ - Included patch from Ax0n (ax0n@starchat.net).
+ - Implemented insecure proxy checking.
+
+GeoStats - version 1.0.4
+ - Added support for SVSNICK.
+ - Small memory leak fixed.
+ - Added 'STATS' command.
+	-LIST statistic entries.
+	-DEL statistic entries.
+v	-COPY statistic entries.
+ - Added 'LOGS' command.
+	-Allows you to view today's logfile via PRIVMSG or NOTICE's.
+ - Fixed -major- problem with the SHUTDOWN command ;-)
+ - Logging Changes
+
+netgod - version 1.0.3
+ - Final Release (possibly?).
+ - Fixed the initial core dump if no user file ;-)
+ - Added close() call when reconnecting to a server. (in start())
+ - -StatServ- Statistics up 8 days, 01:12
+
+netgod - version 1.0.2
+ - Fixed bug in 'AWAY' netstats.
+ - Added a new part to 'HELP TLD'.
+ - Modified 'server has split from '...
+  
+netgod - Fri Mar 12 18:43:21 CST 1999
+ - Found/fixed small problem in 'SERVER' output.
+ 
+netgod - Thu Mar 11 21:47:13 CST 1999
+ - Servers with lag time of > 45 are now sent via privmsg to either a channel or user.
+ 
+netgod - Sun Mar  7 17:59:47 CST 1999
+ - Ok, found the fscking problem with not keeping track of IRCops right...
+ 
+netgod - Sun Mar  7 13:51:26 CST 1999
+ - Fixed small memory leak.
+ - Corrected users-that-are-away %
+ - Corrected Current Opers (NETSTATS)
+ - Logfiles are now kept in logs/ changed every night..
+ - Modified 'server has split from the network N times'
+   
+netgod - Sun Mar  7 09:55:48 CST 1999
+ - Started ChangeLog

@@ -1,0 +1,8 @@
+This module requires IRC based configuration once loaded.
+
+THIS MODULE HAS BEEN CHANGED DRASTICALLY READ THE ChangeLog in this directory for more information.
+
+HostServ 2.1 NOW USES PASSWORD FIELDS.  Your OLD database (vhosts.db) will not work (segfault).  Either start your
+vhosts.db fresh or manually edit each line and at the end of each line enter a password for the user.  Would be easier
+to start fresh then re-add when people complain about their vhosts being missing.  This is the last major DB update for
+awhile for HostServ. ;)

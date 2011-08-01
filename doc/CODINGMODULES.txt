@@ -1,0 +1,307 @@
+************************************************************************
+** NeoStats - IRC Statistical Services                                **
+** Copyright (c) 1999-2008 NeoStats Group. All Rights Reserved.       **
+** This program and all associated documentation is free but          **
+** copyrighted software; see the file COPYING for details.            **
+** Homepage: http://www.neostats.net/                                 **
+************************************************************************
+
+(For the most recent version of these guides, refer to 
+http://wiki.neostats.net/confluence/display/Dev)
+
+How to write a NeoStats 3.0 Module
+----------------------------------
+
+This document explains how to write modules for NeoStats 3.0. These 
+instructions apply to versions 3.0 and higher. For older versions you 
+must refer to the documentation which comes with that version since they
+versions had a different API specification.
+
+This document also includes a section at the end for upgrading your
+modules to 3.0 from 2.5.x. 
+
+NeoStats 3.0 has four types of module.
+
+1) General Modules. These are the type of module you will usually want 
+to develop and are discussed in this file.
+2) Authentication Modules. These provide authentication systems which
+define what users have access to NeoStats functions and are discussed
+in this file.
+3) Protocol modules. These allow NeoStats to talk to a given type of
+IRCd. For information on protocol modules see protocol.txt.
+4) DBA modules. These allow NeoStats to store and fetch data from a 
+given DBM. For information on DBA modules see dba.txt.
+
+-----------------------------------<>-----------------------------------
+
+What can modules do?
+--------------------
+
+Anything that the Server receives from users, or other servers can be
+intercepted by a module. This basically means that you can do what ever 
+you want in your modules. 
+
+In order to help you learn how to make a module, we have included an
+example basic module in template/template.c. The easiest way to start
+a module is to copy that file and add the features you want. For
+authentication modules use the file templateauth/templateauth.c as
+the starting point.
+
+-----------------------------------<>-----------------------------------
+First we must include the header file which gives our code access to the 
+NeoStats API:
+
+#include "neostats.h"
+
+We must export a definition of specific information about the module. 
+This is required.
+
+/** Module Info definition 
+ *	This describes the module to the NeoStats core and provides information
+ *  to end users when modules are queried.
+ *  The structure is required but some fields are optional.
+ */
+ModuleInfo module_info = {
+	/* REQUIRED: 
+	 * name of module e.g. StatServ */
+	"Template",
+	/* REQUIRED: 
+	 * one line brief description of module */
+	"Put your brief module description here",
+	/* OPTIONAL: 
+	 * pointer to a NULL terminated list with copyright information
+	 * NeoStats will automatically provide a CREDITS command to output this
+	 * use NULL for none */
+	template_copyright,
+	/* OPTIONAL: 
+	 * pointer to a NULL terminated list with extended description
+	 * NeoStats will automatically provide an ABOUT command to output this
+	 * use NULL for none */
+	template_about,
+	/* REQUIRED: 
+	 * version of neostats used to build module
+	 * must be NEOSTATS_VERSION or your module will not load */
+	NEOSTATS_VERSION,
+	/* REQUIRED: 
+	 * string containing version of module 
+	 * returned when a user requests 
+	 * /msg botname version */
+	"1.0",
+	/* REQUIRED: string containing build date of module 
+	 * should be __DATE__ */
+	__DATE__,
+	/* REQUIRED: string containing build time of module 
+	 * should be __TIME__ */
+	__TIME__,
+	/* OPTIONAL: 
+	 * Module control flags, 
+	 * use 0 if not needed */
+	0,
+	/* OPTIONAL: 
+	 * Protocol flags for required protocol specfic features e.g. SETHOST
+	 * use 0 if not needed */
+	0,
+};
+
+This information is used to report back to users on what modules and 
+what versions are loaded and can be used by the core and other modules 
+to check that they are compatible.
+
+We can also have a table for any events on IRC that we wish to process. 
+This is optional.
+
+/** Module event list
+ *  What events we will act on
+ *  This is required if you want your module to respond to events on IRC
+ *  see events.h for a list of all events available
+ */
+ModuleEvent module_events[] = {
+	{EVENT_NULL,	NULL, 0}
+	NS_EVENT_END()
+};
+
+The table contains the event we want to process (e.g. SIGNON), the 
+function to call when it happens (e.g. MySignonHandler) and optional
+flags related to event (e.g. EVENT_FLAG_USE_EXCLUDE). Events are 
+raised for both server and user actions.
+
+The table must be NULL terminated with a correctly formed NULL entry.
+A macro NS_EVENT_END() is provided for this purpose.
+
+Descriptions of all available events and their parameters are listed in
+"events.h". The header file is automatically included by "neostats.h" 
+so you do not need to include it in your module.
+
+There are three specialist functions that a module must define:
+
+ModInit is called when a module is first loaded so can be used to 
+initialise settings for your module. It must not be used to start
+anything which will try to send commands to the IRC network such
+as starting a bot since you may not be connected to a network when
+this function is called. It is mainly useful for processing 
+configuration and starting databases.
+
+/** @brief ModInit
+ *
+ *  Init module
+ *
+ *  @param none
+ *
+ *  @return NS_SUCCESS if suceeds else NS_FAILURE
+ */
+
+int ModInit( void )
+{
+	return NS_SUCCESS;
+}
+
+ModSynch is called when your module is able to send over IRC so is
+where you would init a bot if you wanted one.
+
+/** @brief ModSynch
+ *
+ *  Startup handler
+ *  Introduce bot onto network
+ *
+ *  @param none
+ *
+ *  @return NS_SUCCESS if suceeds else NS_FAILURE
+ */
+
+int ModSynch( void )
+{
+	/* Introduce a bot onto the network saving the bot handle */
+	template_bot = AddBot (&template_bot_info);
+	if (!template_bot) {
+		return NS_FAILURE;
+	}
+	return NS_SUCCESS;
+}
+
+ModFini is called when a module is unloaded so is useful for saving
+databases.
+
+/** @brief ModFini
+ *
+ *  Fini handler
+ *
+ *  @param none
+ *
+ *  @return NS_SUCCESS if suceeds else NS_FAILURE
+ */
+
+int ModFini (void)
+{
+	return NS_SUCCESS;
+}
+
+NeoStats provides an API to send commands over IRC. These are designed
+to mimic the way you send commands on IRC as a user to make them
+intuitive to use but must be sent from a bot you have created.
+
+To create a bot, you must first use a definition to describe the bot:
+
+/** Define information about our bot
+ */
+BotInfo template_bot_info = 
+{
+	/* REQUIRED: 
+	 * nick */
+	"changeme",
+	/* OPTIONAL: 
+	 * altnick, use "" if not needed */
+	"altnick",
+	/* REQUIRED: 
+	 * user */
+	"changeme",
+	/* REQUIRED: 
+	 * host that this bot will use 
+	 * for the neostats host, use BOT_COMMON_HOST */
+	BOT_COMMON_HOST,
+	/* REQUIRED: 
+	 * realname */
+	"Example NeoStats module",
+	/* OPTIONAL: 
+	 * flags */
+	0, 
+	/* OPTIONAL: 
+	 * bot command list pointer, use NULL if not needed */
+	template_commands, 
+	/* OPTIONAL: 
+	 * bot command setting pointer, use NULL if not needed */
+	template_settings,
+};
+
+You then pass this structure to NeoStats with the AddBot function 
+call from your ModSynch function:
+
+	/* Introduce a bot onto the network saving the bot handle */
+	template_bot = AddBot (&template_bot_info);
+
+Your bot can now issue commands on IRC as if it was a user but using
+the irc_command functions. E.g. if you want your bot to join a 
+channel you would use the irc_join function. 
+
+	irc_join (template_bot, "#channelname", "");
+
+A full list of available irc functions are found in "neostats.h".
+
+-----------------------------------<>-----------------------------------
+Timers are available for your module. There are several types of timer
+you can choose from. 
+
+To add a timer:
+
+	AddTimer( type, func, name, interval );
+
+    type     - Type of timer from
+			   TIMER_TYPE_INTERVAL
+			   TIMER_TYPE_DAILY
+			   TIMER_TYPE_WEEKLY
+			   TIMER_TYPE_MONTHLY
+			   TIMER_TYPE_COUNTDOWN	   
+    func     - the function you want to trigger when this timer 
+               is triggered
+    name     - a descriptive name of the timer
+    interval - interval in seconds that this function is to be 
+               called (TIMER_TYPE_INTERVAL and TIMER_TYPE_COUNTDOWN). 
+                    
+Note, this interval is not precise. NeoStats will check the timers and 
+if at least interval has passed, will call your routine. Since NeoStats 
+is single threaded, it runs in a continuous loop, meaning that if 
+NeoStats itself, or another module held up that loop, then the timers 
+are not going to run until that piece of code completes. Therefore an 
+interval of 60 seconds might be called after 65 seconds.
+
+To delete a timer:
+
+    int DelTimer( name )
+
+    name     - the name the timer created with in AddTimer
+
+
+-----------------------------------<>-----------------------------------
+TODO:
+Sockets. They can make outgoing tcp connections to other servers (i.e., 
+web, email, etc)
+
+-----------------------------------<>-----------------------------------
+Upgrading modules from 2.5.x to 3.0
+-----------------------------------
+
+TODO
+
+-----------------------------------<>-----------------------------------
+That's about it. 
+
+The module API is constantly reviewed and is updated and added to from 
+time to time. We try to maintain backwards compatibility where it is 
+possible for a short time after we make any major changes. Your modules
+should always work with all releases of the 3.0 series.
+
+If you have any questions, comments or suggestions about our module API
+or this document, please post on our message boards at www.neostats.net. 
+
+************************************************************************
+** This document was last updated on January 31st, 2005 by M          **
+************************************************************************

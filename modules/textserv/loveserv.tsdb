@@ -1,0 +1,78 @@
+description {
+	version = "3.0.a3"
+	about = "Send presents and messages to loved ones on IRC."
+	credits = "Copyright (c) 1999-2008, NeoStats. http://www.neostats.net/"
+}
+command ROSE {
+	helpstring ={"Send a rose to a loved one."}
+	output = {"%F has sent you this beautiful rose! 3--<--<--<{4@"}
+	action = false
+	triggertype = 1
+	paramlist = {"<Nick/Channel> - Who to send the rose too"}
+}
+command KISS {
+	helpstring = {"Send a kiss to that special someone."}
+	output = {"%F has virtually kissed you!"}
+	action = false
+	triggertype = 1
+	paramlist = {"<Nick/Channel> - Who should you kiss"}
+}
+command TONSIL {
+	helpstring = {"Send a deep tonsil penitrating kiss to someone."}
+	output ={"%F would like to send a SLoW..LoNG..DeeP..PeNeTRaTiNG..ToNSiL-TiCKLiNG.. HaiR STRaiGHTeNiNG..Toe-CuRLiNG..NeRVe-JaNGLiNG..LiFe-aLTeRiNG.. FaNTaSY-CauSiNG..i JuST SaW GoD!..GoSH, DiD MY CLoTHeS FaLL oFF?.. YeS, i'M GLaD i CaMe oN iRC..KiSS oN Da LiPS!!!"}
+	action = false
+	triggertype = 1
+	paramlist = {"<Nick/Channel> - Who give a huge kiss too"}
+}
+command HUG {
+	helpstring = {"Send a hug to someone."}
+	output = {"%F has sent you a *BIG WARM HUG*!"}
+	action = false
+	triggertype = 1
+	paramlist = {"<Nick/Channel> - Who to hug"}
+}
+command ADMIRER {
+	helpstring = {"Tell someone they have a secret admirer."}
+	output = {"You have a secret admirer! ;)"}
+	action = false
+	triggertype = 1
+	paramlist = {"<Nick/Channel> - Who should I tell u like them"}
+}
+command CHOCOLATE {
+	helpstring = {"Send a big yummy box of candy to someone."}
+	output = {"%F would like you to have this yummy box of chocolates"}
+	action = false
+	triggertype = 1
+	paramlist = {"<Nick/Channel> - Who should I give the chocolates too"}
+}
+command CANDY {
+	helpstring = {"Send someone a box of yummy heart shaped candies."}
+	output = {"%F would like you to have this big yummy bag of heart shaped candies"}
+	action = false
+	triggertype = 1
+	paramlist = {"<Nick/Channel> - Who should I give the candies to"}
+}
+command LOVENOTE {
+	helpstring ={"Send that special someone a love note."}
+	output = {"%F has sent you a love note which reads: %P"}
+	action = false
+	triggertype = 1
+	paramlist = {"<Nick/Channel> - Who to send the lovenote to",
+		     "<Message> - What message should be sent"}
+}
+command APOLOGY {
+	helpstring = {"Send an apology to someone."}
+	output = {"%F is sorry, and would like to apologise for %P"}
+	action = false
+	triggertype = 1
+	paramlist = {"<Nick/Channel> - Who to send the apology to",
+		     "<Message> - what you are apologizing for"}
+}
+command THANKYOU {
+	helpstring = {"Send a thank you message to someone."}
+	output = {"%F wishes to thank you for %P"}
+	action = false
+	triggertype = 1
+	paramlist = {"<Nick/Channel> - Who to send the Thank You Message to",
+		     "<Message> - What to thank for"}
+}

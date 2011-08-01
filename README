@@ -1,0 +1,534 @@
+************************************************************************
+** NeoStats - IRC Statistical Services                                **
+** Copyright (c) 1999-2008 NeoStats Group. All Rights Reserved.       **
+** This program and all associated documentation is free but          **
+** copyrighted software; see the file COPYING for details.            **
+** Homepage: http://www.neostats.net/                                 **
+************************************************************************
+
+Thank you for downloading NeoStats. 
+
+NeoStats is a powerful and extendable set of *services* for IRC. By 
+Services, we do not mean NickServ/Chanserv etc but additional services. 
+These additional services include things like StatServ which gives you 
+statistics on the number of users/operators/channels/servers, and
+MoraleServ, which is a *fun* module, to send funny messages to users, 
+and utility modules. Some modules have a useful function on your 
+network, other modules are developed for fun, and to make your IRC 
+network more attractive to users.
+
+The 3.0 series of NeoStats offers many improvements over previous 
+versions. A detailed list of changes can be found in the ChangeLog file, 
+but a brief summary is:
+    - Simplified configure, build and install process.
+    - Improved debug mode to provide information to us more easily in
+      the event of problems and avoid polluting general logs with
+      debug information.
+    - New segfault log file to log any segfaults which occur with
+      NeoStats for better support.
+    - New and improved API for module coders.
+    - Many updates to the various modules.
+    - New backend database storage based on standard DBM systems.
+    - New athentication modules and API to allow custom authentication.
+    - Improved protocol module API to make it easier to add support for
+      other IRCds.
+    - Many optimisations of the core to speed up NeoStats operation and
+      reduce the resource requirements. 
+    - DCC chat support to allow users to operate NeoStats via a DCC chat
+      session.
+    - Native Windows support including full support for modules.
+    - All commands have configurable user levels.
+    - Perl API, so you can write new modules or extend existing modules
+      in the Perl Scripting Language
+    - Automatic notification of new versions, when they become available
+    - a large range of supported IRCd's 
+
+Visit http://www.neostats.net for the latest news and NeoStats updates.
+
+Please read all documentation included with NeoStats carefully. The 
+documents contain all the information you need to get NeoStats running
+on your network. These documents include README, and the wiki, at 
+http://wiki.neostats.net/confluence/display/NeoStats/Home
+
+-----------------------------------<>-----------------------------------
+All documentation applies to version 3.0.0 and higher. For older 
+versions consult the documentation with that version or consider 
+upgrading. New versions of NeoStats have many new features and bug 
+fixes. We are not able to provide support for older versions of
+NeoStats. 
+
+Following is a quick guide to the main NeoStats documentation:
+
+README -        This file. How to install and configure NeoStats 
+                and support information.
+RELNOTES -      Release notes about the current version. This is 
+                displayed during the installation process but you should 
+                refer to it if you have problems.
+ChangeLog -     Information about what has changed between versions. 
+                Consult this document for detailed information about the
+                changes. 
+The Majority of Documentation can now be found on our NeoStats Wiki, 
+located at http://wiki.neostats.net/confluence/display/NeoStats/Home
+You are encouraged to check that site, as thats where most recent 
+version of our documenation will be
+
+-----------------------------------<>-----------------------------------
+
+Contents
+--------
+
+1. Installing and configuring NeoStats
+    1.1 General notes
+    1.2 Getting Started.
+    1.3 Running configure
+    1.4 Compiling NeoStats
+    1.5 Installing NeoStats
+    1.6 Setting up the neostats.conf file
+    1.7 Compiling additional modules
+    1.8 Running NeoStats
+    1.9 Notes for upgraders
+2. Support Information
+    2.1 Before contacting support
+    2.2 Where to get support
+    2.3 What to provide when requesting support.
+3. Contributions
+
+
+1. Installing and configuring NeoStats
+--------------------------------------
+
+This section explains how to install and configure NeoStats. We 
+recommend that you read this section in full before trying to install 
+NeoStats.
+
+If you have any problems NOT addressed in this or other documents, 
+please see the Support section for how to contact us for help.
+
+
+1.1 General notes
+-----------------
+
+All commands and filenames are case sensitive. This means that 
+NeoStats, neostats and NEOSTATS are all different things. When 
+typing commands you should use the same case as provided in this 
+file or things will not work correctly.
+
+
+1.2 Getting Started
+-------------------
+
+First, you need to uncompress NeoStats. To do this type the following:
+
+        tar xvfz NeoStats3.0.x.tar.gz 
+
+This will vary depending on the version you run of NeoStats. Change the 
+x in NeoStats3.0.x.tar.gz to match your filename e.g. 
+
+        NeoStats3.0.0.tar.gz
+
+For systems that don't run a new version of tar you need to do this:
+
+        gzip -d NeoStats3.0.x.tar.gz
+        tar xvf NeoStats3.0.x.tar
+
+1.3 Running configure
+---------------------
+
+You must first run the configure script so that NeoStats can determine
+your build environment.
+
+To run configure, you must first change to the directory where you 
+uncompressed NeoStats. e.g.
+
+        cd ~/NeoStats3.0.0
+
+Your prompt should look something like:
+    
+        [user@host NeoStats3.0.0]
+
+Now type:
+    
+        ./configure
+        
+The configure script will then check to see if all necessary programs to 
+run NeoStats are installed on your system. 
+
+Optional settings:
+------------------
+
+There are some options you can pass to configure if you wish. 
+
+Debugging:
+
+Most users will never look at this option. It compiles NeoStats 
+with debugging turned on. I would only suggest using this if you 
+have problems and are about to make a bug report.
+
+        --enable-debug        Enables Debugging
+
+Enabling RAW command:
+
+We strongly recommend against the use of this option. Use of RAW 
+commands can cause desync on your network and badly formatted commands 
+can crash your network. If you do enable this option, we will not 
+provide any support for your use of this command. Please do not contact 
+us for support of the RAW command.
+
+        --enable-raw 
+
+
+1.4 Compiling NeoStats
+----------------------
+
+You should now be back at a shell prompt, type:
+
+        make
+
+it will go through the source and compile it into an executable 
+binary file. 
+
+
+1.5 Installing NeoStats
+-----------------------
+
+If you are upgrading a working version of NeoStats. Please read section 
+1.9 Notes for Upgraders now.
+
+NeoStats must be "installed" into its own directory. By default NeoStats 
+will install into ~/NeoStats3.0/ i.e. in your home directory e.g.
+
+        /home/fish/NeoStats3.0/
+    
+If you wish to change the install location, please type 
+
+		./configure --help
+		
+and follow the instructions on screen.
+
+To install NeoStats type:
+
+        make install
+
+This will create the necessary files, and copy them to the 
+installation directory. 
+
+
+1.6 Setting up the neostats.conf file
+-------------------------------------
+
+Now you should change to the installation directory (~/NeoStats/, or 
+whatever you specified in ./configure) e.g.
+
+        cd ~/NeoStats3.0
+
+Your prompt should look something like:
+    
+        [user@host NeoStats3.0]
+
+Once in this directory, you need to create a configuration file. You
+should now run the makeconf script and answer the questions:
+    
+        ./bin/makeconf
+
+You must edit neostats.conf to check that everything is set the way you 
+want it before NeoStats will run. You can do this with:
+
+        pico neostats.conf
+
+All the options are described in the neostats.conf file and you should
+refer to this file for assistance. 
+
+When you are finished, save the file. If using pico as in the previous 
+example, press Ctrl-X then hit Y and enter to save the file and exit.
+
+1.7 Compiling additional modules
+--------------------------------
+
+If you have downloaded other NeoStats modules e.g. OPSB, you should now 
+install them. If you are upgrading NeoStats, you must rebuild all other 
+separate modules to work with the new version of NeoStats. See the 
+documentation with these modules for instructions on building and 
+installing them. 
+
+Modules written for previous series of NeoStats will not work with the 
+3.0 series. You must contact the module author for an updated version of 
+the module. All official modules have a 3.0 compatible version available.
+
+1.8 Running NeoStats
+--------------------
+
+NeoStats is now configured and installed. 
+
+Before running NeoStats you must make sure that your server(s) have C: 
+N: and U: lines for your NeoStats server. 
+WE WILL NOT ASSIST YOU WITH ADDING C: N: AND U: LINES TO YOUR SERVER, 
+YOU SHOULD READ THE IRCD DOCUMENTATION IF YOU DO NOT KNOW HOW TO DO 
+IT!!! DO NOT CONTACT US ABOUT C: N: and U: Lines
+
+Once your C/N/U lines are setup, you need to start NeoStats. You should 
+change to the directory where NeoStats in installed e.g.
+
+        cd ~/NeoStats3.0
+
+Then to run NeoStats type:
+
+        ./neostats start
+
+It should link and sync with your server in a matter of seconds.
+
+Please now read
+http://wiki.neostats.net/confluence/display/NeoStats/Operator+Manual
+for details on how to operate NeoStats from an IRC Client.
+
+If anything goes wrong, there *might* be an error message in the log 
+files. Have a look in ~/NeoStats3.0/logs/neostats-date.log it might give 
+you a clue to what's wrong! NeoStats might also send a wallops to the 
+network about what went wrong. Check the status window of your IRC client. 
+
+There are some command line options for NeoStats that you may find
+useful:
+
+    -h        will display a help screen showing these options.
+    -v        will display the version number
+    -d 1-10   Enable debugging output 1 = lowest, 10 = highest
+    -n        Do not load any modules on startup
+    -q        Quiet start - for cron scripts
+    -f        Do not fork into background (for debugging)
+
+To use these options, add the option(s) you require when you run 
+NeoStats, e.g.:
+
+	./neostats start -h
+	
+Note: although you can combine most of these options, -v (version)
+and -h (help) will return information to you and NeoStats will not
+process any other options you pass. 	
+
+
+1.9 Notes for upgraders
+-----------------------
+
+This section is for users upgrading a NeoStats 3.0 series installation
+only. If you are upgrading from an older series of NeoStats such as 
+2.5.x, you must treat it as a new installation. Your configuration and
+data from 2.5.x is not compatible with NeoStats 3.0. 
+
+If you are upgrading from an older version of the 3.0 series we 
+recommend that you backup the current version first. 
+
+If you are running crontab for NeoStats, we recommend that you disable 
+this before making the upgrade so that cron does not start up an older
+versopn while you are working on the upgrade. 
+
+Make sure that NeoStats is not running. In an IRC client connected to 
+your network type:
+
+        /msg NeoStats shutdown Upgrade
+
+NeoStats will save important information so wait for this to finish. 
+
+To make the backup go to your home directory and type:
+
+        cp NeoStats3.0 NeoStatsBackup -r
+
+If you fail to perform this backup and the upgrade causes you problems, 
+you might lose all NeoStats information. 
+
+We also recommend rebuilding any additional modules after upgrading
+NeoStats. You may not need to upgrade the additional module, just 
+rebuild and reinstall it after the make install in Step 1.4 above.
+
+If after upgrading, NeoStats crashes when loading one of your modules 
+e.g. OPSB, this usually means that you did not rebuild the module for 
+the latest version of NeoStats. 
+
+If you do run into problems upgrading and need to restore your backup, 
+you can do so by going to your home directory and typing:
+
+        cp NeoStatsBackup NeoStats3.0 -r
+
+Your old modules will also be restored along with the old version of
+NeoStats so there is no need to rebuild them for a restore. 
+
+
+-----------------------------------<>-----------------------------------
+
+2 Support Information
+---------------------
+
+2.1 Before contacting support
+-----------------------------
+
+** IMPORTANT - PLEASE READ BEFORE CONTACTING US **
+
+In order that we can dedicate time to developing NeoStats and can address 
+support issues quickly, there are some ways you can help to reduce 
+unnecessary support calls to the NeoStats team. 
+
+First, check you are using the latest release version of NeoStats as found on 
+the NeoStats download page. It could be that your problem is fixed or your 
+suggestion implemented in the latest version. We are not able to provide 
+support for older versions of NeoStats than the current release. 
+
+We provide no support for SVN snapshots whether released on the web site or 
+not. If you have downloaded a SVN snapshot and are having problems, you should 
+revert back to your previous working version or if this is your first 
+installation, the current release build as indicated on the web site. Please 
+do not contact us about problems with SVN versions. We will advise users 
+occasionally to try a SVN snapshot to fix a problem, but as we do not put our 
+SVN versions through extensive testing, there might be new bugs or problems. 
+
+We may occasionally provide a custom modification to resolve a problem. Other 
+than in this event, we provide no support for modified versions of NeoStats. 
+If you have modified NeoStats in any way and experience problems, you should 
+only contact us if you can reproduce the problem with an unmodified version. 
+We are not able to support modifications to NeoStats made by others. 
+
+Before contacting us with a problem or a bug, please make sure you have read 
+all the documentation provided. You should then check the web site bug list 
+and search the forums to see if your problem has already been reported and if 
+a solution has been posted. 
+
+Read the log files. NeoStats tries to log problems it encounters and the log
+file should tell you what went wrong. If the error in the log file does not 
+help you, you still need to tell us what it says.
+
+Before sending us a suggestion, you should check the forums carefully to see 
+if your suggestion has already been made and if the NeoStats team have decided 
+to implement it or not. 
+
+You do not have to read all the messages to find out if your issue has 
+already been discussed. The use of the "Search" feature on the forums is a 
+great way to quickly get answers to your problem if other users have already 
+encountered the issue. 
+
+Read the post entitled Bug Reporting Guidelines in the forum before posting.
+This is at the top of all the support forums. It reminds you what 
+information you must provide to get support.
+
+NeoStats Group are only able to help with issues affecting NeoStats. We are 
+not able to help set up your IRC Server or Services on your network (including 
+the setup of C: N: and U: lines) so please don't ask us. If you have a 
+question about your IRC Server or Services package, please check the 
+documentation that came with them and contact their team if you still need 
+assistance. 
+
+The RAW command is an unsupported command. If you need help using it, you 
+should probably not be using it. Please do not ask us for help on the RAW 
+command.
+
+Thank you. 
+
+
+2.1 Where to get support
+------------------------
+
+You can get support for NeoStats in a number of different ways so choose
+the one that suits you best.
+
+* Bug reporting system
+You can check this to see if there are any known bugs in NeoStats and 
+find out when they are fixed. For the bug tracking system, visit:
+
+        http://bugs.neostats.net/
+
+* Message boards available at:
+
+        http://www.neostats.net/boards/
+
+* The Neostats Wiki available at:
+	http://wiki.neostats.net/confluence/display/NeoStats/
+
+* The NeoStats IRC support channel at:
+
+        server:  irc.irc-chat.net 
+        channel: #neostats
+
+Be warned that we are not always available on the channel to help you. 
+
+2.2 What to provide when requesting support
+-------------------------------------------
+
+It always helps to provide as much information as possible about your 
+environment when asking for help. Please make sure you include at least 
+the following information:
+    
+    Operating system version (i.e., Redhat 7.0, Mandrake 9.1 etc)
+    gcc version (found via gcc -v)
+    Version of NeoStats you are using and if the problem is with a 
+    module, the version of the module (found via /msg neostats modlist)
+    The type of IRCD you are attempting to connect to (and version 
+    number)
+    NeoStats will generate a file called segfault.log if it crashes. If
+    this file exists, you must send it to us.
+    
+We may request that you enable debugging and submit us the results of 
+debugging. To enable debugging, use the following command to start 
+NeoStats:
+
+        ./bin/neostats -d10
+
+When it crashes, or the bug has been reproduced, send the following 
+files:
+        
+        segfault.log 
+        logs/debug.log
+
+This will help us to be able to reproduce the bug and create a fix for 
+it.
+
+Sometimes we might request you to run a GDB backtrace of the problem
+In order to generate that you will execute the following commands:
+        
+	gdb bin/neostats 
+
+when you arrive at the GDB command prompt, type:
+
+        run -fd 10
+
+now go and make NeoStats crash in some way. when it crashs, you will 
+be returned to the GDB command prompt. Type:
+
+	bt full
+
+and save that output to send to us. To exit GDB, just type "quit"        
+
+Remember you cannot give us too much information about your system and
+setup, but if you do not give us enough, we cannot help you and if we 
+have to keep asking you to provide more information, that is less time
+we are spending fixing and developing NeoStats.
+
+-----------------------------------<>-----------------------------------
+
+3. Contributions
+----------------
+
+Want to Help us? 
+
+We are always looking for help.
+
+Currently, what we really are looking for is people to help us out with 
+our documentation on the wiki and of course, other people that can code 
+in C to help us with development.
+
+if you would like to have a go at writting your own module, in either 
+C or Perl, you can consult 
+http://wiki.neostats.net/confluence/display/Dev for documenation. We 
+will also provide you with a SVN repository, bug tracker, and all the 
+other tools that we use (such as build servers etc) if you want it. 
+Just contact Fish to find out how to get started.
+
+If you would like to help out, See Support Information above for details 
+on how to contact us.
+
+Finally, as I (Fish) do not have a single artistic bone in my body, I'm
+always looking for people to help out with our websites at 
+http://www.neostats.net and http://secure.irc-chat.net/. If you are any
+good with HTML and would like to help us "spruce" up our webpages, just 
+contact me.
+
+-----------------------------------<>-----------------------------------
+
+************************************************************************
+** This document was last updated on March 5th, 2008 by Fish          **
+************************************************************************

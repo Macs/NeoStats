@@ -1,0 +1,36 @@
+* NeoStats * Jackster35 & Macs * Version 3.0.2
+==============================================================================
+Important information you should know: (READ THIS!)
+==============================================================================
+
+This if the first "gold" release of NeoStats 3.0. It is *NOT* compatible 
+with previous 2.5.x releases of NeoStats, so you will have to setup 
+NeoStats all over again. We may, in the future, provide some scripts to 
+port some of your settings and data from 2.5 to 3.0, but these scripts are
+not available now.
+
+NeoStats 3.0 will co exist with an existing 2.5 series installation so you
+can run both together for testing this version if you wish.
+
+Settings and data files for previous 3.0 alpha versions may not be compatible
+with this version. You should delete or move all files with "gdbm" or "bdb" 
+in the filename from the directory ~/NeoStats 3.0/data if you have 
+problems/crashs after upgrading
+
+Known issues that we are aware of and should not be reported:
+
+==============================================================================
+* I get a link error: /usr/bin/ld: cannot find -lperl during the make step
+of the installation on Debian. What's wrong?
+
+- You need to install the libperl-dev package.
+
+Alternatively, create a symbolic link from libperl.so.5.6.1 to libperl.so in
+/usr/lib:
+
+    % cd /usr/lib; ln -s libperl.so.5.6.1 libperl.so
+and re-run the make step of the installation.
+
+or if you dont want to take advantage of perl modules and extensions, then
+you can run ./configure --disable-perl
+==============================================================================

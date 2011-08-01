@@ -1,0 +1,18 @@
+ _______________________________________________________ 
+| NeoStats compiled and installed successfully.         |
+|                                                       |
+| Please read the README and visit                      |
+| http://wiki.neostats.net/confluence/display/NeoStats/ |
+| for information on how to configure NeoStats.         |
+|                                                       |
+| You should now build and install any external modules |
+| such as SecureServ, OPSB, LogServ, StupidServ or any  |
+| third party modules. Refer to the documentation with  |
+| the modules for details on how to compile and install |
+| it.                                                   |
+|                                                       |
+| If this is an upgrade, you still need to rebuild and  |
+| install external modules before running this version  |
+| of NeoStats                                           |
+|_______________________________________________________|
+	

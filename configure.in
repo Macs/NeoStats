@@ -1,0 +1,513 @@
+
+#                                               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+AC_PREREQ(2.57)
+AC_INIT()
+AC_CONFIG_AUX_DIR(autotools)
+AC_CONFIG_SRCDIR([src/main.c])
+AC_CONFIG_HEADER([include/config.h])
+AC_PREFIX_DEFAULT(~/NeoStats3.0)
+AC_CACHE_LOAD
+#Standard Defines for autoconf here
+x_maj=3
+x_min='0'
+x_rev='1'
+x_package='NeoStats'
+MODULES="connectserv hostserv statserv ircdauth extauth limitserv textserv quoteserv operlog dccpartyline perltest templateauth template update"
+#dont edit anything after this line!
+
+x_version=$x_maj.$x_min.$x_rev
+AM_INIT_AUTOMAKE($x_package, $x_version)
+AM_MAINTAINER_MODE
+AC_DEFINE_UNQUOTED(MAJOR, $x_maj, "Major Version Number")
+AC_DEFINE_UNQUOTED(MINOR, $x_min, "Minor Version Number")
+AC_DEFINE_UNQUOTED(REV, $x_rev, "Revision Version Number")
+AC_DEFINE_UNQUOTED(NEO_VERSION, "$x_version", "Full Version")
+
+AC_MSG_HEADER([Configuring Core Now])
+
+AC_LIBTOOL_DLOPEN
+dnl AC_DISABLE_SHARED
+dnl AC_LIBTOOL_WIN32_DLL
+dnl AC_LIBLTDL_CONVENIENCE
+
+# Checks for programs.
+AC_PROG_CC
+CARES_CLEAR_LIBTOOL_TAGS
+AC_PROG_LIBTOOL
+AC_PROG_YACC 
+AC_PROG_LEX
+AC_PATH_PROG( SED, sed, , $PATH:/usr/bin:/usr/local/bin)
+
+AC_PATH_PROG(unamepath, uname)
+if test "_$unamepath" = _; then
+	system="unknown"
+else
+	AC_MSG_CHECKING(system type)
+	system=`$unamepath -s`
+	AC_MSG_RESULT($system)
+fi
+
+case "$system" in
+	"Darwin")
+		;;
+	*)
+		CFLAGS="$CFLAGS -g -rdynamic"
+		LDFLAGS="$LDFLAGS -g -rdynamic"
+		;;
+esac	
+AC_DEFINE_UNQUOTED(OS, "${host}", [cpu-machine-OS])
+	
+# Checks for libraries.
+# AC_LIB_LTDL
+AC_CHECK_LIB(dl, dlopen)
+AC_CHECK_LIB(socket, socket)
+AC_CHECK_LIB(m, log10)
+AC_REPLACE_FUNCS(getopt)
+AC_CHECK_MEMBERS([struct stat.st_blksize])
+
+# Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(
+        sys/time.h \
+	sys/socket.h \
+        malloc.h \
+        assert.h \
+        ctype.h \
+        errno.h \
+        stddef.h \
+        stdio.h \
+        stdarg.h \
+        arpa/inet.h \
+        arpa/nameser.h \
+        net/if.h \
+        netinet/in.h \
+        netdb.h \
+        sys/sockio.h \
+        sys/param.h \
+        sys/resource.h \
+        termios.h \
+        termio.h \
+        sgtty.h \
+        fcntl.h \
+        alloca.h \
+        winsock.h \
+        time.h \
+        io.h \
+        pwd.h \
+        utime.h \
+	limits.h \
+        sys/utime.h \
+        sys/poll.h \
+        setjmp.h \
+        sys/file.h \
+        sys/dir.h \
+	poll.h \
+	signal.h \
+	sys/epoll.h \
+	sys/queue.h \
+	sys/event.h \
+	sys/ioctl.h \
+	sys/devpoll.h,
+dnl to do if not found
+[],
+dnl to do if found
+[],
+dnl default includes
+[
+#ifdef HAVE_SYS_TYPES_H
+#include <sys/types.h>
+#endif
+#ifdef HAVE_SYS_TIME_H
+#include <sys/time.h>
+#endif
+#ifdef HAVE_SYS_SELECT_H
+#include <sys/select.h>
+#endif
+#ifdef HAVE_SYS_SOCKET_H
+#include <sys/socket.h>
+#endif
+]
+)
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_C_INLINE
+AC_TYPE_SIZE_T
+AC_TYPE_PID_T
+AC_HEADER_TIME
+AC_STRUCT_TM
+AC_C_VOLATILE
+AC_CHECK_SIZEOF(off_t)
+AC_CHECK_TYPE(u_int64_t, unsigned long long)
+AC_CHECK_TYPE(u_int32_t, unsigned int)
+AC_CHECK_TYPE(u_int16_t, unsigned short)
+AC_CHECK_TYPE(u_int8_t, unsigned char)  
+
+AC_CHECK_TYPE(long long,
+   [AC_DEFINE(HAVE_LONGLONG, 1, [if your compiler supports 'long long'])])
+
+# check for ssize_t
+AC_CHECK_TYPE(ssize_t, ,
+   AC_DEFINE(ssize_t, int, [the signed version of size_t]))
+
+TYPE_SOCKLEN_T
+TYPE_IN_ADDR_T
+
+AC_FUNC_SELECT_ARGTYPES
+AC_CHECK_FUNCS( socket \
+                select \
+                strdup \
+                strstr \
+                strspn \
+		strsep \
+                strcasestr \
+                strtok_r \
+                uname \
+                strcasecmp \
+                stricmp \
+                strcmpi \
+                gethostbyaddr \
+                gettimeofday \
+                inet_addr \
+                inet_ntoa \
+                inet_aton \
+                inet_pton \
+                inet_ntop \
+                perror \
+                closesocket \
+                siginterrupt \
+                sigaction \
+                signal \
+                getpwuid \
+                geteuid \
+                dlopen \
+                utime \
+                sigsetjmp \
+		memmove \
+		bcopy \
+		strerror \
+                poll \
+                rename \
+                ftruncate \
+                flock \
+                fsync \
+		vasprintf \
+		fcntl,
+dnl if found
+[],
+dnl if not found, $ac_func is the name we check for
+  func="$ac_func"
+  AC_MSG_CHECKING([deeper for $func])
+  AC_TRY_LINK( [],
+               [ $func ();],
+               AC_MSG_RESULT(yes!)
+               eval "ac_cv_func_$func=yes"
+               def=`echo "HAVE_$func" | tr 'a-z' 'A-Z'`
+               AC_DEFINE_UNQUOTED($def, 1, [If you have $func]),
+               AC_MSG_RESULT(but still no)
+               )
+
+)
+ADNS_C_GCCATTRIB
+
+
+
+# Checks for library functions.
+# AC_REPLACE_FNMATCH
+AC_FUNC_FORK
+AC_PROG_GCC_TRADITIONAL
+AC_TYPE_SIGNAL
+AC_FUNC_STAT
+AC_FUNC_STRTOD
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS(strnlen strlcpy strlcat strndup)
+
+dnl backtrace is used for segv reporting
+AC_CHECK_FUNC(backtrace, 
+[LIBS="-g $LIBS"],
+[BLD_LIBEXEC="execinfo"
+LNK_LIBEXEC="execinfo/libexecinfo.la"
+CFLAGS="$CFLAGS "'-I$(top_srcdir)/lib/execinfo/'
+LIBS="-g $LIBS"]
+)
+AC_DEFINE(HAVE_BACKTRACE, 1, 'backtrace function available')
+AC_SUBST([BLD_LIBEXEC])
+AC_SUBST([LNK_LIBEXEC])
+
+
+dnl **** Check for underscore on external symbols ****
+
+AC_CACHE_CHECK(whether external symbols need an underscore prefix,
+               ac_cv_c_extern_prefix,
+[saved_libs=$LIBS
+LIBS="conftest_asm.s $LIBS"
+cat > conftest_asm.s <<EOF
+	.globl _ac_test
+_ac_test:
+	.long 0
+EOF
+AC_TRY_LINK([extern int ac_test;],[if (ac_test) return 1],
+            ac_cv_c_extern_prefix="yes",ac_cv_c_extern_prefix="no")
+LIBS=$saved_libs])
+if test "$ac_cv_c_extern_prefix" = "yes"
+then
+  AC_DEFINE(NEED_UNDERSCORE_PREFIX, 1, "Our Platfrom requires Underscores")
+fi
+
+dnl How to copy one va_list to another?
+AC_CACHE_CHECK([for va_copy], ns_va_copy, [AC_LINK_IFELSE(
+  [AC_LANG_PROGRAM([#include <stdarg.h>], [va_list ap1, ap2; va_copy(ap1, ap2);])],
+  [ns_va_copy="yes"],
+  [ns_va_copy="no"]
+)])
+if test "$ns_va_copy" = "yes" ; then
+  AC_DEFINE(HAVE_VA_COPY, 1, [Define if we have va_copy]) fi
+
+AC_CACHE_CHECK([for __va_copy], ns___va_copy, [AC_LINK_IFELSE(
+  [AC_LANG_PROGRAM([#include <stdarg.h>], [va_list ap1, ap2; __va_copy(ap1, ap2);])],
+  [ns___va_copy="yes"],
+  [ns___va_copy="no"]
+)])
+if test "$ns___va_copy" = "yes" ; then
+  AC_DEFINE(HAVE___VA_COPY, 1, [Define if we have __va_copy]) fi
+
+
+dnl Set NEO_PREFIX in config.h.
+if test "x${prefix}" = "xNONE"; then
+   AC_DEFINE_UNQUOTED(NEO_PREFIX, "${ac_default_prefix}", "Installation Prefix")
+else
+  AC_DEFINE_UNQUOTED(NEO_PREFIX, "${prefix}", "Installation Prefix")
+fi
+
+
+
+AX_PATH_LIB_PCRE
+AX_PATH_LIB_CURL
+
+
+
+	AC_ARG_ENABLE(perl,
+	[  --disable-perl          don't build the perl plugin],
+	        perl=$enableval, perl=yes)
+
+	if test "$perl" = yes; then
+		AC_MSG_HEADER([Configuring for Perl Modules Now])
+		AC_PATH_PROG(sedpath, sed)
+		if test "_$sedpath" = _; then
+			AC_MSG_ERROR("Cannot find sed: I need it\!")
+		fi
+
+		AC_PATH_PROG(perlpath, perl)
+
+		AC_MSG_CHECKING(for Perl compile flags)
+		PERL_CFLAGS=`$perlpath -MExtUtils::Embed -e ccopts 2>/dev/null`
+dnl		PERL_CFLAGS=`echo $PERL_CFLAGS |$sedpath 's/-Wdeclaration-after-statement //'`
+		if test "_$PERL_CFLAGS" = _ ; then
+			AC_MSG_RESULT([not found, building without perl.])
+			perl=no
+		else
+			AC_MSG_RESULT(ok)
+			AC_MSG_CHECKING([Checking for perl includes directory])
+			PERL_INCLUDES=`$perlpath -MExtUtils::Embed -e perl_inc 2>/dev/null`
+			AC_MSG_RESULT($PERL_INCLUDES)
+			CFLAGS="$CFLAGS "$PERL_INCLUDES
+			PERL_LDFLAGS=`$perlpath -MExtUtils::Embed -e ldopts |$sedpath 's/-lgdbm //'`
+			PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-ldb //'`
+			PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lndbm //'`
+			if test "$system" = "Linux"; then
+				PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lnsl //'`
+				PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lposix //'`
+			fi
+			PERL_LDFLAGS=`echo $PERL_LDFLAGS |$sedpath 's/-lc //'`
+
+			AC_MSG_CHECKING(for $perlpath >= 5.8.0)
+			PERL_VER=`$perlpath -e 'print $]>= 5.008?"yes":"no"'`
+
+			if test "$PERL_VER" = "yes"; then
+				AC_MSG_RESULT(yes)
+				perl=no
+dnl				AC_MSG_CHECKING([Checking for perl compiler, linker, libraries and headers])
+				AC_CHECK_HEADERS([EXTERN.h perl.h XSUB.h], [
+					perl=yes
+				],
+				[
+					perl=no
+					PERL_LDFLAGS=""
+					PERL_CFLAGS=""
+					AC_MSG_RESULT([Failed. Perl Support Disabled. See the RELNOTES file])
+					break
+				],
+				[
+				#ifdef HAVE_EXTERN_H
+				#include <EXTERN.h>
+				#endif
+				#ifdef HAVE_PERL_H
+				#include <perl.h>
+				#endif
+				#ifdef HAVE_XSUB_H
+				#include <XSUB.h>
+				#endif
+				]
+				)
+			else
+				AC_MSG_RESULT(no)
+				PERL_LDFLAGS=""
+				PERL_CFLAGS=""
+				perl=no
+			fi
+		fi
+	fi
+
+
+AC_SUBST(PERL_CFLAGS)
+AC_SUBST(PERL_LDFLAGS)
+AM_CONDITIONAL(DO_PERL, test "x$perl" = "xyes")
+if test "x$perl" = "xyes"; then
+	AC_DEFINE_UNQUOTED(USE_PERL, 1, 'Enable Perl Support')
+fi
+
+
+
+
+AC_DEFINE_UNQUOTED(NS_HOST, "$host_os", "Operating System Host")
+AC_MSG_HEADER([Configuring CCDV Now])
+wi_ARG_DISABLE_CCDV
+wi_PROG_CCDV
+AC_MSG_HEADER([Configuring LibEvent Now])
+CHK_LIBEVNT
+dnl option to disable BDB
+AC_MSG_CHECKING([Should we try to compile BDB])
+AC_ARG_ENABLE(bdb, AC_HELP_STRING([--enable-bdb],[Enable Berkley Database Support]),
+[ case "$enableval" in
+  yes)
+	AC_MSG_RESULT([Yes])
+	AC_MSG_HEADER([Checking for Berkeley Database])
+	AX_BERKELEY_DB([4.1],
+	[BLD_BDB=bdb
+	AC_SUBST(BLD_BDB)]
+	)
+	;;
+  *)
+	AC_MSG_RESULT(no)
+	;;
+  esac],
+AC_MSG_RESULT(no)
+)
+
+AC_MSG_HEADER([NeoStats Configuration Summary:])
+
+dnl check if we are running with Debug....
+AC_MSG_CHECKING(Whether to Enable Debuging...)
+AC_ARG_ENABLE(debug,
+AC_HELP_STRING([--enable-debug], [Enable Debuging]),
+[ case "$enableval" in
+  yes)
+	AC_DEFINE(DEBUG, 1, 'Enable Debugging')
+	CFLAGS="$CFLAGS -ggdb -Wall"
+	AC_MSG_RESULT(yes - Watch your Log Files)
+	;;
+  *)
+	CFLAGS="$CFLAGS -DNDEBUG"
+	AC_MSG_RESULT(no)
+	;;
+  esac],
+CFLAGS="$CFLAGS -DNDEBUG"
+AC_MSG_RESULT(no)
+)
+
+CFLAGS="$CFLAGS -fno-strict-aliasing"
+
+AC_MSG_CHECKING(To Enable AutoTools Debug Mode?)
+AC_ARG_ENABLE(autodebug, AC_HELP_STRING([--enable-autodebug], [Enable AutoTools Debug]),
+[ case "$enableval" in
+  yes)
+	AC_MSG_RESULT(yes)
+	;;
+  *)
+	AC_MSG_RESULT(no)
+	AX_MAINTAINER_MODE_AUTO_SILENT
+	;;
+esac],
+AC_MSG_RESULT(no)
+AX_MAINTAINER_MODE_AUTO_SILENT
+)
+	
+
+AC_MSG_CHECKING(To Enable Raw command?)
+AC_ARG_ENABLE(raw, AC_HELP_STRING([--enable-raw], [Enable Raw command]),
+[ case "$enableval" in
+  yes)
+	AC_DEFINE(USE_RAW, 1, 'Use Raw command')
+	AC_MSG_RESULT(yes)
+	;;
+  *)
+	AC_MSG_RESULT(no)
+	;;
+esac],
+AC_MSG_RESULT(no)
+)
+
+
+
+
+AC_MSG_CHECKING(The Modules that will be automatically compiled)
+AC_MSG_RESULT($MODULES)
+
+AC_MSG_CHECKING(The additional modules to compile?)
+AC_ARG_WITH(modules, AC_HELP_STRING([--with-modules],[Additional Modules to compile]),
+MODULES="$MODULES $withval"
+AC_MSG_RESULT($withval),
+AC_MSG_RESULT("None"))
+
+AX_DISTVERSION
+
+CFLAGS="$CFLAGS -fno-strict-aliasing"
+
+AC_SUBST(PROTOCOL)
+AC_SUBST(SED)
+AC_SUBST(LIBTOOL_DEPS)
+AC_SUBST(MODULES)
+AC_SUBST(LIBDB)
+AC_SUBST(CCDV)
+AC_SUBST(EVNTLIBOBJS)
+AC_CONFIG_FILES([Makefile 
+		include/Makefile 
+		src/Makefile
+		modules/protocol/Makefile 
+		modules/dbm/Makefile 
+		modules/dbm/bdb/Makefile 
+		modules/dbm/gdbm/Makefile 
+		lib/Makefile
+		lib/curl/Makefile
+		lib/pcre/Makefile 
+		lib/event/Makefile
+		lib/nxml/Makefile
+		lib/execinfo/Makefile
+		modules/Makefile 
+		modules/connectserv/Makefile
+		modules/extauth/Makefile
+		modules/hostserv/Makefile
+		modules/ircdauth/Makefile
+		modules/statserv/Makefile
+		modules/textserv/Makefile
+		modules/quoteserv/Makefile
+		modules/limitserv/Makefile
+		modules/operlog/Makefile
+		modules/dccpartyline/Makefile
+		modules/perltest/Makefile
+		modules/templateauth/Makefile
+		modules/template/Makefile
+		modules/update/Makefile
+		neostats])
+
+AC_CACHE_SAVE
+AC_OUTPUT
+AC_MSG_HEADER([Configuration complete.])
+if test ! -f .hush; then \
+	read -p "Press Enter key to read the release notes"; \
+	clear; \
+	more RELNOTES; \
+	echo "Run 'make' (or 'gmake' on some systems) to compile NeoStats."; \
+	echo "If you require support, see the README file."; \
+fi;

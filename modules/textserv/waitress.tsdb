@@ -1,0 +1,94 @@
+description {
+	version = "3.0.a3"
+	about = "Restaurant Service."
+	credits = "Copyright (c) 1999-2008, NeoStats. http://www.neostats.net/"
+}
+command BURGER {
+	helpstring = {"Order a burger & fries"}
+	output = {"fixes up a %P burger and fries, and brings it to %F"}
+	action = true
+	paramlist = {"<Type> - Type of Burger to order"}
+	triggertype = 2
+}
+command FRIES {
+	helpstring = {"Basket of our famous seasoned fries"}
+	output = {"fills a basket of our famous seasoned french fries, and brings it to %F's table"}
+	action = true
+	triggertype = 2
+}
+command PIZZA {
+	helpstring = {"Hot pizza of your choice"}
+	output = {"bakes a %P pizza and brings it over to %F."}
+	action = true
+	paramlist = {"<Type> - Type of Pizza to order"}
+	triggertype = 2
+}
+command BREAD {
+	helpstring = {"Hot breadsticks of your choice"}
+	output = {"bakes some %P breadsticks and puts them in a basket. Then brings them over to %F."}
+	action = true
+	paramlist = {"<Type> - Type of Breadsticks to order"}
+	triggertype = 2
+}
+command NACHOS {
+	helpstring = {"Big plate of nachos with melted cheese"}
+	output = {"prepares a heaping plate of nachos for %F, with melted cheese, beef, beans, sour cream and quacomole"}
+	action = true
+	triggertype = 2
+}
+command POTATO {
+	helpstring = {"Big plate of potato skins"}
+	output = {"brings out a large plate of potato skins and sour cream for %F, Careful its hot."}
+	action = true
+	triggertype = 2
+}
+command WINGS {
+	helpstring = {"Wings as spicy as you want"}
+	output = {"cooks a dozen wings %P and brings them over to %F!"}
+	action = true
+	paramlist = {"<Temp> - how spicy you want your wings"}
+	triggertype = 2
+}
+command SALAD {
+	helpstring = {"Fresh tossed salad"}
+	output = {"ACTION tosses a fresh %P salad for %F"}
+	action = true
+	paramlist = {"<Type> - Type of Salad"}
+	triggertype = 2
+}
+command BUYPIZZA {
+	helpstring = {"Buy someone a pizza"}
+	output = {"gives %P1 a %P2 pizza, Compliments of %F."}
+	action = true
+	paramlist = {"<Nick/Channel> - Who to buy a pizza for",
+		     "<Type> - Type of Pizza"}
+	triggertype = 2
+}
+command DELIVER {
+	helpstring = {"Deliver items to someone"}
+	output = {"delivers %P2 to %P1. Compliments of %F."}
+	action = true
+	paramlist = {"<Nick/Channel> - Who to deliver the item to",
+		     "<Item> - What item to deliver"}
+	triggertype = 2
+}
+command TIP {
+	helpstring = {"Give me a tip"}
+	output = {"takes the %P, 'Thanks %F!'"}
+	action = true
+	paramlist = {"<Ammount> - Amount to Tip"}
+	triggertype = 2
+}
+command PAY {
+	helpstring = {"Pay your bill"}
+	output = {"accepts payment of %P from %F and rips up the bill, That about covers it!"}
+	action = true
+	paramlist = {"<Ammount> - Amount to Pay"}
+	triggertype = 2
+}
+command PIZZACHAN {
+	helpstring = {"Buy pizza for the entire channel"}
+	output = {"hands out pizza to the entire channel, Compliments of %F."}
+	action = true
+	triggertype = 2
+}
